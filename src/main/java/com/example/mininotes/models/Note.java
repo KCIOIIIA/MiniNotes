@@ -2,7 +2,7 @@ package com.example.mininotes.models;
 
 import jakarta.persistence.*;
 @Entity
-@Table(name = "NOTE")
+@Table(name = "PC_NOTE")
 public class Note {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -17,12 +17,23 @@ public class Note {
     private String updateDateTime;
     @Column(name="accessMode")
     private AccessMode accessMode;
+    @Column(name="isDelete")
+    private Boolean isDelete;
 
     @ManyToOne
     @JoinColumn(name = "Note_id")
     public Folder folder;
 
-    public Note() {
+    public Note() {}
+
+    public Note(long id, String title, String body, String createDateTime,
+                String updateDateTime, AccessMode accessMode){
+        this.id = id;
+        this.title = title;
+        this.body = body;
+        this.createDateTime = createDateTime;
+        this.updateDateTime = updateDateTime;
+        this.accessMode = accessMode;
     }
     public void setId(long id) {
         this.id = id;
@@ -40,6 +51,7 @@ public class Note {
     public void setAccessMode(AccessMode accessMode) {
         this.accessMode = accessMode;
     }
+    public void setDelete(Boolean delete) {isDelete = delete;}
 
     public long getId() {
         return id;
@@ -57,9 +69,6 @@ public class Note {
     public AccessMode getAccessMode() {
         return accessMode;
     }
-}
-
-enum AccessMode {
-    CLOSED, VIEWING, VIEWING_EDITING
+    public Boolean getDelete() {return isDelete;}
 }
 

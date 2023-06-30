@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 @Repository
 public interface FolderRep extends JpaRepository<Folder, Long> {
+    //Folder findById(Long id);
 }

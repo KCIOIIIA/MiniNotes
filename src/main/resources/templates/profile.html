@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        body{
+            background: #B0E1D0;
+            font-size:20px;}
+        .otst{
+            margin-left: 15%;
+            margin-right: 15%;
+        }
+        .navbar {
+            display: flex;
+            column-gap: 25px;
+            overflow: hidden;
+            justify-content: space-between;
+            background-color: #FFFFFF;
+            font-family: Impact;
+            text-align: center;
+            padding-right: 10%;
+            padding-left: 10%;
+        }
+        .navbar a {
+            float: left;
+            font-size: 20px;
+            color: #B0E1D0;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        .static {
+            position: absolute;
+            background: white;
+
+        }
+        .static:hover {
+            opacity: 0;
+        }
+        .rightpic1 {
+            float: left; /* Выравнивание по правому краю */
+        }
+        .rightpic2 {
+            float: right;
+        }
+        .rtab {
+            margin-right: 20%;
+            margin-left: 52%;
+        }
+        .form {
+            background-color: #FFFFFF;
+            border-radius: 20px;
+            box-sizing: border-box;
+            height: 220px;
+            padding: 20px;
+            width: 135%;
+        }
+        .form0 {
+            background-color: #B0E1D0;
+            border-radius: 20px;
+            box-sizing: border-box;
+            height: 40px;
+            padding: 10px;
+            text-align: center;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+<div class="navbar">
+    <a th:href="@{/user/{userId}/desktop(userId = ${id0})}">
+        <img class="static" th:src="@{/png/home.png}" alt="" width = 64px height = 64px>
+        <img th:src="@{/png/home.gif}" alt="" width = 64px height = 64px></a>
+    <a th:href="@{/user/{userId}/profile(userId = ${id0})}">
+        <img class="static" th:src="@{/png/user.png}" alt="" width = 64px height = 64px>
+        <img th:src="@{/png/user.gif}" alt="" width = 64px height = 64px></a>
+    <a th:href="@{/user/folders}">
+        <img class="static" th:src="@{/png/project.png}" alt="" width = 64px height = 64px>
+        <img th:src="@{/png/project.gif}" alt="" width = 64px height = 64px></a>
+    <a th:href="@{/user/bin}">
+        <img class="static" th:src="@{/png/bin.png}" alt="" width = 64px height = 64px>
+        <img th:src="@{/png/bin.gif}" alt="" width = 64px height = 64px></a>
+    <a th:href="@{/}">
+        <img class="static" th:src="@{/png/exit.png}" alt="" width = 64px height = 64px>
+        <img th:src="@{/png/exit.gif}" alt="" width = 64px height = 64px></a>
+
+</div>
+<div class="otst">
+    <br><br>
+    <p><img  th:src="@{/png/user_profile.png}" alt="" width = 340px height = 330px class="rightpic1"></p>
+</div>
+
+<h2 align="center"> <font face="Impact">Данные пользователя:</font> </h2>  <br>
+<div class = "rtab">
+    <div class="form">
+        <h3 align="center"> <font face="Impact">Имя: </font> </h3>
+        <div class="form0">
+            <span th:text="${user.getName()}"></span>
+        </div>
+        </p>
+        <p><a th:href="@{/user/{userId}/profile/edit(userId = ${id0})}">
+            <img class="rightpic2" th:src="@{/png/ready.gif}" alt="" width = 45px height = 45px>
+        </a>
+        </p>
+    </div>
+</div>
+</body>
+</html>
