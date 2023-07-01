@@ -1,13 +1,18 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ru" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <link th:href="@{/css/style.css}" rel="stylesheet"/>
   <style>
     body{
       background: #B0E1D0;
+      font-size:20px;
+      font-family: "Tahoma";
     }
     .navbar {
+      border-color: #33cccc;
+      border-style: solid;
       display: flex;
       column-gap: 25px;
       overflow: hidden;
@@ -23,7 +28,6 @@
       font-size: 10px;
       color: #B0E1D0;
       text-align: center;
-      padding: 14px 16px;
       text-decoration: none;
     }
     .static {
@@ -66,31 +70,67 @@
         }
       }
     }
+    .form {
+      background-color: #FFFFFF;
+      font-family: "Tahoma";
+      border-radius: 20px;
+      font-size:20px;
+      box-sizing: border-box;
+      padding: 20px;
+      height: 70px;
+      text-align: center;
+      width: 700px;
+    }
+    .form0 {
+      background-color: #FFFFFF;
+      font-family: "Tahoma";
+      border-radius: 20px;
+      font-size:20px;
+      box-sizing: border-box;
+      padding: 10px;
+      height: 70px;
+      text-align: center;
+      width: 700px;
+    }
+    .center {
+      padding-right: 20%;
+      padding-left: 20%;
+    }
+    a { color:#000000; text-decoration:none;}
   </style>
 </head>
 <body>
 <div class="navbar">
   <a th:href="@{/user/{userId}/desktop(userId = ${id0})}">
-    <img class="static" th:src="@{/png/home.png}" alt="" width = 64px height = 64px>
-    <img th:src="@{/png/home.gif}" alt="" width = 64px height = 64px></a>
+    <img th:src="@{/png/home_a.png}" alt="" width = 55px height = 55px></a>
   <a th:href="@{/user/{userId}/profile(userId = ${id0})}">
-    <img class="static" th:src="@{/png/user.png}" alt="" width = 64px height = 64px>
-    <img th:src="@{/png/user.gif}" alt="" width = 64px height = 64px></a>
-  <a th:href="@{/user/folders}">
-    <img class="static" th:src="@{/png/project.png}" alt="" width = 64px height = 64px>
-    <img th:src="@{/png/project.gif}" alt="" width = 64px height = 64px></a>
-  <a th:href="@{/user/bin}">
-    <img class="static" th:src="@{/png/bin.png}" alt="" width = 64px height = 64px>
-    <img th:src="@{/png/bin.gif}" alt="" width = 64px height = 64px></a>
+    <img class="static" th:src="@{/png/user.png}" alt="" width = 55px height = 55px>
+    <img th:src="@{/png/user.gif}" alt="" width = 55px height = 55px></a>
+  <a th:href="@{/user/{userId}/bin(userId = ${id0})}">
+    <img class="static" th:src="@{/png/bin.png}" alt="" width = 55px height = 55px>
+    <img th:src="@{/png/bin.gif}" alt="" width = 55px height = 55px></a>
   <a th:href="@{/}">
-    <img class="static" th:src="@{/png/exit.png}" alt="" width = 64px height = 64px>
-    <img th:src="@{/png/exit.gif}" alt="" width = 64px height = 64px></a>
+    <img class="static" th:src="@{/png/exit.png}" alt="" width = 55px height = 55px>
+    <img th:src="@{/png/exit.gif}" alt="" width = 55px height = 55px></a>
+</div>
+<br>
+
+<div class="center">
+
+<div class="form0">
+<a th:href="@{/user/{userId}/folder/add(userId = ${id0})}">
+  <img th:src="@{/png/new_folder.gif}" alt="" width = 55px height = 55px></a>
 </div>
 
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<table th:if="${not #lists.isEmpty(folder)}">
+  <tr th:each="f : ${folder}">
+    <td><div class="form">
+      <a th:href="@{/user/{userId}/folder/{folderId}/notes(userId = ${id0}, folderId = ${f.getId()})}"><span th:text="${f.name}"></span></a>
+    </div></td>
+  </tr>
+</table>
+
+</div>
 
 <div class="btn-up btn-up_hide"></div>
 <script>

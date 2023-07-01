@@ -1,0 +1,141 @@
+<!DOCTYPE HTML>
+<html lang="ru" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link th:href="@{/css/style.css}" rel="stylesheet"/>
+  <style>
+    body{
+      background: #B0E1D0;
+      font-size:20px;
+    }
+    .navbar {
+      border-color: #33cccc;
+      border-style: solid;
+      display: flex;
+      column-gap: 25px;
+      overflow: hidden;
+      justify-content: space-between;
+      background-color: #FFFFFF;
+      text-align: center;
+      padding-right: 10%;
+      padding-left: 10%;
+    }
+    .navbar a {
+      float: left;
+      font-size: 10px;
+      color: #B0E1D0;
+      text-align: center;
+      text-decoration: none;
+    }
+    .static {
+      position: absolute;
+      background: white;
+    }
+    .static:hover {
+      opacity: 0;
+    }
+    @media screen and (max-width: 1835px) {
+      .btn-up {
+        position: fixed;
+        background-color: #000000;
+        left: 20px;
+        bottom: 0px;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.3s ease-in-out;
+        width: 60px;
+        height: 50px;
+        opacity: 1;
+      }
+      .btn-up::before {
+        content: "";
+        width: 40px;
+        height: 40px;
+        background-size: 100% 100%;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23fff' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z'/%3E%3C/svg%3E");
+      }
+      .btn-up_hide {
+        display: none;
+      }
+      @media (hover: hover) and (pointer: fine) {
+        .btn-up:hover {
+          background-color: #33cccc;
+        }
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="navbar">
+  <a th:href="@{/user/{userId}/desktop(userId = ${id0})}">
+    <img class="static" th:src="@{/png/home.png}" alt="" width = 55px height = 55px>
+    <img th:src="@{/png/home.gif}" alt="" width = 55px height = 55px></a>
+    <a th:href="@{/user/{userId}/profile(userId = ${id0})}">
+      <img class="static" th:src="@{/png/user.png}" alt="" width = 55px height = 55px>
+      <img th:src="@{/png/user.gif}" alt="" width = 55px height = 55px></a>
+    <a th:href="@{/user/bin}">
+      <img th:src="@{/png/bin_a.png}" alt="" width = 55px height = 55px></a>
+    <a th:href="@{/}">
+      <img class="static" th:src="@{/png/exit.png}" alt="" width = 55px height = 55px>
+      <img th:src="@{/png/exit.gif}" alt="" width = 55px height = 55px></a>
+</div>
+
+<br>
+
+<div class="btn-up btn-up_hide"></div>
+<script>
+  const btnUp = {
+    el: document.querySelector('.btn-up'),
+    scrolling: false,
+    show() {
+      if (this.el.classList.contains('btn-up_hide') && !this.el.classList.contains('btn-up_hiding')) {
+        this.el.classList.remove('btn-up_hide');
+        this.el.classList.add('btn-up_hiding');
+        window.setTimeout(() => {
+          this.el.classList.remove('btn-up_hiding');
+        }, 300);
+      }
+    },
+    hide() {
+      if (!this.el.classList.contains('btn-up_hide') && !this.el.classList.contains('btn-up_hiding')) {
+        this.el.classList.add('btn-up_hiding');
+        window.setTimeout(() => {
+          this.el.classList.add('btn-up_hide');
+          this.el.classList.remove('btn-up_hiding');
+        }, 300);
+      }
+    },
+    addEventListener() {
+      window.addEventListener('scroll', () => {
+        const scrollY = window.scrollY || document.documentElement.scrollTop;
+        if (this.scrolling && scrollY > 0) {
+          return;
+        }
+        this.scrolling = false;
+        if (scrollY > 400) {
+          this.show();
+        } else {
+          this.hide();
+        }
+      });
+      document.querySelector('.btn-up').onclick = () => {
+        this.scrolling = true;
+        this.hide();
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: 'smooth'
+        });
+      }
+    }
+  }
+
+  btnUp.addEventListener();
+</script>
+</body>
+</html>
