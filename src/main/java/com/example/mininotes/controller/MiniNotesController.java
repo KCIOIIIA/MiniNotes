@@ -91,6 +91,43 @@ public class MiniNotesController {
         }
         return "folderAdd";
     }
+
+    @GetMapping("/user/{id0}/folder/{id1}/edit")
+    public String editFolderGet(@PathVariable long id0, @PathVariable long id1, Model model) {
+        return "notesEdit";
+    }
+
+    @PostMapping("/user/{id0}/folder/{id1}/edit")
+    public String editFolder(@PathVariable long id0, @PathVariable long id1,
+                             @RequestParam("name") String name, Model model) {
+        Optional<User> userOptional = userRep.findById(id0);
+        if (userOptional.isPresent()){
+            User user = userOptional.get();
+            Optional<Folder> folderOptional = folderRep.findById(id1);
+            Folder folder = folderOptional.get();
+            folder.setName(name);
+            model.addAttribute("folder", folder);
+            model.addAttribute("id0", id0);
+            model.addAttribute("id1", id1);
+            folderRep.save(folder);
+        }
+        return "notesEdit";
+    }
+
+    @GetMapping("/user/{id0}/folder/{id1}/delete")
+    public String deleteFolder(@PathVariable long id0, @PathVariable long id1, Model model) {
+        Optional<User> userOptional = userRep.findById(id0);
+        if (userOptional.isPresent()){
+            User user = userOptional.get();
+            Optional<Folder> folderOptional = folderRep.findById(id1);
+            Folder folder = folderOptional.get();
+            user.removeFolder(folder);
+            userRep.save(user);
+        }
+        return "desktop";
+    }
+
+
     @GetMapping("/user/{id0}/folder/{id1}/notes")
     public String getNotes(@PathVariable long id0, @PathVariable long id1, Model model) {
         Optional<Folder> folderOptional = folderRep.findById(id1);
@@ -106,7 +143,7 @@ public class MiniNotesController {
     @PostMapping("/user/{id0}/folder/{id1}/notes/add")
     public String addNotes(@PathVariable long id0, @PathVariable long id1,
                            @RequestParam("title") String title,
-                           @RequestParam("body") String body, Model model) {
+                           @RequestParam("contentbox") String body, Model model) {
         Optional<User> userOptional = userRep.findById(id0);
         Optional<Folder> folderOptional = folderRep.findById(id1);
         if (userOptional.isPresent()){

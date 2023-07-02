@@ -21,13 +21,14 @@
             overflow: hidden;
             justify-content: space-between;
             background-color: #FFFFFF;
+            font-family: Impact;
             text-align: center;
             padding-right: 10%;
             padding-left: 10%;
         }
         .navbar a {
             float: left;
-            font-size: 20px;
+            font-size: 10px;
             color: #B0E1D0;
             text-align: center;
             text-decoration: none;
@@ -86,7 +87,7 @@
         <img class="static" th:src="@{/png/home.png}" alt="" width = 55px height = 55px>
         <img th:src="@{/png/home.gif}" alt="" width = 55px height = 55px></a>
     <a th:href="@{/user/{userId}/profile(userId = ${id0})}">
-        <img th:src="@{/png/user_a.png}" alt="" width = 55px height = 55px></a>
+        <img th:src="@{/png/user_activ.png}" alt="" width = 55px height = 55px></a>
     <a th:href="@{/user/{userId}/bin(userId = ${id0})}">
         <img class="static" th:src="@{/png/bin.png}" alt="" width = 55px height = 55px>
         <img th:src="@{/png/bin.gif}" alt="" width = 55px height = 55px></a>
@@ -96,6 +97,7 @@
 </div>
 
 <br><br><br>
+
 
 <img class="rightpic1" th:src="@{/png/user_profile0.gif}" alt="" width = 400px height = 400px>
 <div class="rtab">
@@ -109,11 +111,14 @@
     <a th:href= "@{mailto:xysha17@gmail.com}">
     <img class="rightpic2" th:src="@{/png/mail.gif}" alt="" width = 64px height = 64px></a>
     <img class="rightpic2" th:src="@{/png/white.png}" alt="" width = 64px height = 64px>
-    <a th:href="@{/user/{userId}/profile/delete(userId = ${id0})}">
+    <a th:href="@{/user/{userId}/profile/delete(userId = ${id0})}" onclick="return confirm('Вы уверены, что хотите удалить аккаунт?');">
     <img class="rightpic2" th:src="@{/png/bin2.gif}" alt="" width = 64px height = 64px></a>
     <img class="rightpic2" th:src="@{/png/white.png}" alt="" width = 64px height = 64px>
     <a th:href="@{/user/{userId}/profile/edit(userId = ${id0})}">
     <img class="rightpic2" th:src="@{/png/ready.gif}" alt="" width = 64px height = 64px></a>
+</script>
+
+
 </div>
 </body>
 </html>

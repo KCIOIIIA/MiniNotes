@@ -9,7 +9,7 @@ public class Note {
     private long id;
     @Column(name="title")
     private String title;
-    @Column(name="body")
+    @Column(name="body", length = 2000)
     private String body;
     @Column(name="createDateTime")
     private String createDateTime;

@@ -71,7 +71,7 @@
       }
     }
     .form {
-      background-color: #ffdca0;
+      background-color: #FFFFFF;
       border-radius: 20px;
       font-size:20px;
       box-sizing: border-box;
@@ -79,6 +79,9 @@
       height: 100%;
       text-align: center;
       width: 700px;
+
+      display: grid; /* display:flex works too since body is the only grid cell */
+      margin: auto;
     }
     .form0 {
       background-color: #FFFFFF;
@@ -89,15 +92,17 @@
       height: 70px;
       text-align: center;
       width: 700px;
+
+      display: grid; /* display:flex works too since body is the only grid cell */
+      margin: auto;
     }
-    .center {
-      padding-right: 20%;
-      padding-left: 20%;
+    .center{
+      display: grid; /* display:flex works too since body is the only grid cell */
+      margin: auto;
     }
     .data{
       text-align: right;
       font-size:10px;
-      color: #939393;
     }
     .titleNote{
       text-align: left;
@@ -110,13 +115,18 @@
       font-size:20px;
       text-align: center;
       font-family: "Zametka_Parletter Regular";
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+    .help{
+      text-align: center;
     }
   </style>
 </head>
 <body>
 <div class="navbar">
   <a th:href="@{/user/{userId}/desktop(userId = ${id0})}">
-    <img th:src="@{/png/home_a.png}" alt="" width = 55px height = 55px></a>
+    <img th:src="@{/png/home_activ.png}" alt="" width = 55px height = 55px></a>
   <a th:href="@{/user/{userId}/profile(userId = ${id0})}">
     <img class="static" th:src="@{/png/user.png}" alt="" width = 55px height = 55px>
     <img th:src="@{/png/user.gif}" alt="" width = 55px height = 55px></a>
@@ -132,12 +142,20 @@
 <div class="center">
 
   <div class="form0">
+    <div class="help">
     <a th:href="@{/user/{userId}/folder/{folderId}/notes/add(userId = ${id0}, folderId = ${id1})}">
       <img th:src="@{/png/new_note.gif}" alt="" width = 55px height = 55px></a>
-  </div>
+    <img th:src="@{/png/white.png}" alt="" width = 55px height = 55px>
+    <a th:href="@{/user/{userId}/folder/{folderId}/edit(userId = ${id0}, folderId = ${id1})}">
+      <img th:src="@{/png/edit_project.gif}" alt="" width = 55px height = 55px></a>
+    <img th:src="@{/png/white.png}" alt="" width = 55px height = 55px>
+    <a th:href="@{/user/{userId}/folder/{folderId}/delete(userId = ${id0}, folderId = ${id1})}" onclick="return confirm('Вы уверены, что хотите удалить текущий проект?')";>
+      <img th:src="@{/png/bin2.gif}" alt="" width = 55px height = 55px></a>
+  </div></div><br>
 
   <table th:if="${not #lists.isEmpty(note)}">
     <tr th:each="n : ${note}">
+
       <td><div class="form">
         <div class="titleNote">
           <span th:text="${n.title}"></span>
@@ -150,8 +168,10 @@
           <br><br>
           <span th:text="${n.createDateTime}"></span>
         </div>
-      </div></td>
+      </div><br></td>
+
     </tr>
+
   </table>
 
 </div>

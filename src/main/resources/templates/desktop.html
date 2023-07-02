@@ -71,7 +71,7 @@
       }
     }
     .form {
-      background-color: #ffdca0;
+      background-color: #FFFFFF;
       font-family: "Tahoma";
       border-radius: 20px;
       font-size:20px;
@@ -80,6 +80,9 @@
       height: 70px;
       text-align: center;
       width: 700px;
+
+      display: grid; /* display:flex works too since body is the only grid cell */
+      margin: auto;
     }
     .form0 {
       background-color: #FFFFFF;
@@ -91,10 +94,13 @@
       height: 70px;
       text-align: center;
       width: 700px;
+
+      display: grid; /* display:flex works too since body is the only grid cell */
+      margin: auto;
     }
-    .center {
-      padding-right: 20%;
-      padding-left: 20%;
+    .center{
+      display: grid; /* display:flex works too since body is the only grid cell */
+      margin: auto;
     }
     a { color:#000000; text-decoration:none;}
   </style>
@@ -102,7 +108,7 @@
 <body>
 <div class="navbar">
   <a th:href="@{/user/{userId}/desktop(userId = ${id0})}">
-    <img th:src="@{/png/home_a.png}" alt="" width = 55px height = 55px></a>
+    <img th:src="@{/png/home_activ.png}" alt="" width = 55px height = 55px></a>
   <a th:href="@{/user/{userId}/profile(userId = ${id0})}">
     <img class="static" th:src="@{/png/user.png}" alt="" width = 55px height = 55px>
     <img th:src="@{/png/user.gif}" alt="" width = 55px height = 55px></a>
@@ -113,13 +119,14 @@
     <img class="static" th:src="@{/png/exit.png}" alt="" width = 55px height = 55px>
     <img th:src="@{/png/exit.gif}" alt="" width = 55px height = 55px></a>
 </div>
+
 <br>
 
 <div class="center">
 
 <div class="form0">
-<a th:href="@{/user/{userId}/folder/add(userId = ${id0})}">
-  <img th:src="@{/png/new_folder.gif}" alt="" width = 55px height = 55px></a>
+  <a th:href="@{/user/{userId}/folder/add(userId = ${id0})}">
+    <img th:src="@{/png/new_folder.gif}" alt="" width = 55px height = 55px></a>
 </div>
 
 <table th:if="${not #lists.isEmpty(folder)}">
