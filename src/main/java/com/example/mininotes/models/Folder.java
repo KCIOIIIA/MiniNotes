@@ -30,6 +30,15 @@ public class Folder {
         this.name = name;
         this.noteSet = noteSet;
     }
+
+    public void addNote(Note note){
+        noteSet.add(note);
+        note.setFolder(this);
+    }
+    public void removeNote(Note note){
+        noteSet.remove(note);
+        note.setFolder(null);
+    }
     public void setId(long id) {this.id = id;}
     public void setName(String name) {
         this.name = name;

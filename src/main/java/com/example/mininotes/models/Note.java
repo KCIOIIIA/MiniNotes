@@ -52,6 +52,7 @@ public class Note {
         this.accessMode = accessMode;
     }
     public void setDelete(Boolean delete) {isDelete = delete;}
+    public void setFolder(Folder folder) {this.folder = folder;}
 
     public long getId() {
         return id;
@@ -70,5 +71,6 @@ public class Note {
         return accessMode;
     }
     public Boolean getDelete() {return isDelete;}
+    public Folder getFolder() {return folder;}
 }
 

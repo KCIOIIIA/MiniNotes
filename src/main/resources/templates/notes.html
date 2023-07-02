@@ -8,7 +8,7 @@
     body{
       background: #B0E1D0;
       font-size:20px;
-      font-family: "Tahoma";
+      font-family: "Zametka_Parletter Regular";
     }
     .navbar {
       border-color: #33cccc;
@@ -72,18 +72,16 @@
     }
     .form {
       background-color: #ffdca0;
-      font-family: "Tahoma";
       border-radius: 20px;
       font-size:20px;
       box-sizing: border-box;
       padding: 20px;
-      height: 70px;
+      height: 100%;
       text-align: center;
       width: 700px;
     }
     .form0 {
       background-color: #FFFFFF;
-      font-family: "Tahoma";
       border-radius: 20px;
       font-size:20px;
       box-sizing: border-box;
@@ -96,7 +94,23 @@
       padding-right: 20%;
       padding-left: 20%;
     }
-    a { color:#000000; text-decoration:none;}
+    .data{
+      text-align: right;
+      font-size:10px;
+      color: #939393;
+    }
+    .titleNote{
+      text-align: left;
+      font-size:20px;
+      color: #000000;
+      position: relative;
+      text-decoration: none;
+    }
+    .body_body{
+      font-size:20px;
+      text-align: center;
+      font-family: "Zametka_Parletter Regular";
+    }
   </style>
 </head>
 <body>
@@ -117,18 +131,28 @@
 
 <div class="center">
 
-<div class="form0">
-<a th:href="@{/user/{userId}/folder/add(userId = ${id0})}">
-  <img th:src="@{/png/new_folder.gif}" alt="" width = 55px height = 55px></a>
-</div>
+  <div class="form0">
+    <a th:href="@{/user/{userId}/folder/{folderId}/notes/add(userId = ${id0}, folderId = ${id1})}">
+      <img th:src="@{/png/new_note.gif}" alt="" width = 55px height = 55px></a>
+  </div>
 
-<table th:if="${not #lists.isEmpty(folder)}">
-  <tr th:each="f : ${folder}">
-    <td><div class="form">
-      <a th:href="@{/user/{userId}/folder/{folderId}/notes(userId = ${id0}, folderId = ${f.getId()})}"><span th:text="${f.name}"></span></a>
-    </div></td>
-  </tr>
-</table>
+  <table th:if="${not #lists.isEmpty(note)}">
+    <tr th:each="n : ${note}">
+      <td><div class="form">
+        <div class="titleNote">
+          <span th:text="${n.title}"></span>
+        </div>
+        <br>
+        <div class="body_body">
+          <span th:text="${n.body}"></span>
+        </div>
+        <div class="data">
+          <br><br>
+          <span th:text="${n.createDateTime}"></span>
+        </div>
+      </div></td>
+    </tr>
+  </table>
 
 </div>
 

@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Optional;
 
 @Controller
@@ -42,8 +44,14 @@ public class MiniNotesController {
         if (!password.equals(password0)){
             return "registration_error";
         } else {
-            System.out.println(user.getId() + "   " + user.getName());
+            //Создать для каждого пользователя начальный проект и заметку
             userRep.save(user);
+            Optional<User> userOptional = userRep.findById(user.getId());
+            User user1 = userOptional.get();
+            Folder folder = new Folder();
+            folder.setName("Первый проект");
+            user1.addFolder(folder);
+            userRep.save(user1);
             return "registration";
         }
     }
@@ -83,6 +91,42 @@ public class MiniNotesController {
         }
         return "folderAdd";
     }
+    @GetMapping("/user/{id0}/folder/{id1}/notes")
+    public String getNotes(@PathVariable long id0, @PathVariable long id1, Model model) {
+        Optional<Folder> folderOptional = folderRep.findById(id1);
+        model.addAttribute("note", folderOptional.get().getNoteSet());
+        model.addAttribute("id0", id0);
+        model.addAttribute("id1", id1);
+        return "notes";
+    }
+    @GetMapping("/user/{id0}/folder/{id1}/notes/add")
+    public String crNotes(@PathVariable long id0, @PathVariable long id1) {
+        return "notesAdd";
+    }
+    @PostMapping("/user/{id0}/folder/{id1}/notes/add")
+    public String addNotes(@PathVariable long id0, @PathVariable long id1,
+                           @RequestParam("title") String title,
+                           @RequestParam("body") String body, Model model) {
+        Optional<User> userOptional = userRep.findById(id0);
+        Optional<Folder> folderOptional = folderRep.findById(id1);
+        if (userOptional.isPresent()){
+            User user = userOptional.get();
+            Folder folder = folderOptional.get();
+            Note note = new Note();
+            note.setTitle(title);
+            note.setBody(body);
+            note.setDelete(false);
+            String date = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy").format(new Date());
+            note.setCreateDateTime(date);
+            folder.addNote(note);
+            user.addFolder(folder);
+            folderRep.save(folder);
+            userRep.save(user);
+        }
+        return "notesAdd";
+    }
+
+
     @GetMapping("/user/{id0}/profile")
     public String getProfile(@PathVariable long id0, Model model) {
         Optional<User> userOptional = userRep.findById(id0);
