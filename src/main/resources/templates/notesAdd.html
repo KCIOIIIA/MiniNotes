@@ -120,7 +120,11 @@
       </div>
 
 
-      <button type="submit" class="btn btn-light">Создать запись</button>
+      <a th:href="@{/user/{userId}/folder/{folderId}/notes(userId = ${id0}, folderId = ${id1})}">
+        <button type="submit" class="btn btn-light">
+          Создать запись
+        </button>
+      </a>
       <br><br>
       <div class="otst">
         <a th:href="@{/user/{userId}/folder/{folderId}/notes(userId = ${id0}, folderId = ${id1})}">
@@ -129,8 +133,6 @@
     </form>
   </div>
 </div>
-
-
 <script type="text/javascript" src="http://ajax.googleapis.com/
 ajax/libs/jquery/1.4.2/jquery.min.js"></script>
 <script type="text/javascript">

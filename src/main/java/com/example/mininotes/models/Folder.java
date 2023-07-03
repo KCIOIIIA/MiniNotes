@@ -16,6 +16,8 @@ public class Folder {
     private long id;
     @Column(name="name")
     private String name;
+    @Column(name="isDelete")
+    private Boolean isDelete;
 
     @ManyToOne
     @JoinColumn(name = "Folder_id")
@@ -25,10 +27,11 @@ public class Folder {
 
     public Folder() {}
 
-    public Folder(long id, String name, Set<Note> noteSet){
+    public Folder(long id, String name, Set<Note> noteSet, Boolean isDelete){
         this.id = id;
         this.name = name;
         this.noteSet = noteSet;
+        this.isDelete = isDelete;
     }
 
     public void addNote(Note note){
@@ -43,6 +46,7 @@ public class Folder {
     public void setName(String name) {
         this.name = name;
     }
+    public void setIsDelete(Boolean isdelete) {isDelete = isdelete;}
     public void setNoteSet(Set<Note> noteSet){this.noteSet = noteSet;}
     public void setUser(User user) {this.user = user;}
 
@@ -52,7 +56,7 @@ public class Folder {
     public String getName() {
         return name;
     }
+    public Boolean getIsDelete() {return isDelete;}
     public Set<Note> getNoteSet() {return noteSet;}
-
     public User getUser() {return user;}
 }

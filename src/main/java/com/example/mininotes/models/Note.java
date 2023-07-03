@@ -27,13 +27,14 @@ public class Note {
     public Note() {}
 
     public Note(long id, String title, String body, String createDateTime,
-                String updateDateTime, AccessMode accessMode){
+                String updateDateTime, AccessMode accessMode, Boolean isDelete){
         this.id = id;
         this.title = title;
         this.body = body;
         this.createDateTime = createDateTime;
         this.updateDateTime = updateDateTime;
         this.accessMode = accessMode;
+        this.isDelete = isDelete;
     }
     public void setId(long id) {
         this.id = id;
@@ -51,7 +52,7 @@ public class Note {
     public void setAccessMode(AccessMode accessMode) {
         this.accessMode = accessMode;
     }
-    public void setDelete(Boolean delete) {isDelete = delete;}
+    public void setIsDelete(Boolean isdelete) {isDelete = isdelete;}
     public void setFolder(Folder folder) {this.folder = folder;}
 
     public long getId() {
@@ -70,7 +71,7 @@ public class Note {
     public AccessMode getAccessMode() {
         return accessMode;
     }
-    public Boolean getDelete() {return isDelete;}
+    public Boolean getIsDelete() {return isDelete;}
     public Folder getFolder() {return folder;}
 }
 
