@@ -9,17 +9,56 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
+import java.util.Set;
 
 @Controller
 public class MiniNotesController {
     //ОБЩИЕ
-    @GetMapping("/")
-    public String index(){
+
+    /*
+    @GetMapping(value = "/")
+    public String index(Principal principal, Model model) {
+        if (principal == null) {
+            return "index";
+        } else {
+//            model.addAttribute("username", principal.getName());
+//            model.addAttribute("user", userRepository.getUserByUsername(principal.getName()).get());
+            return "redirect:/" + principal.getName();
+        }
+    }
+
+    @GetMapping(value = "/login")
+    public String login(Principal principal, Model model) {
+        if (principal == null) {
+            return "login";
+        } else {
+            return "redirect:/";
+        }
+    }
+
+     */
+
+/*
+    @PostMapping("/")
+    public String indexPost(@RequestParam("uname") String uname,
+                            @RequestParam("psw") String psw, Model model){
+        User user = new User();
+        user.setName(uname);
+        user.setPassword(psw);
+        model.addAttribute("uname", uname);
+        model.addAttribute("psw", psw);
+        System.out.println(user.getName() + ' ' + user.getPassword());
         return "index";
     }
+ */
+@GetMapping("/")
+public String index(){
+    return "index";
+}
     @GetMapping("/login")
     public String login(){
         return "login";
@@ -39,6 +78,8 @@ public class MiniNotesController {
         User user = new User();
         user.setName(name);
         user.setPassword(password);
+        user.setRole(Role.USER);
+        user.setStatus(Status.ACTIV);
         model.addAttribute("user", user);
         model.addAttribute("password0", password0);
         if (!password.equals(password0)){
@@ -50,6 +91,7 @@ public class MiniNotesController {
             User user1 = userOptional.get();
             Folder folder = new Folder();
             folder.setName("Первый проект");
+            folder.setIsDelete(false);
             user1.addFolder(folder);
             userRep.save(user1);
             return "registration";
@@ -70,27 +112,40 @@ public class MiniNotesController {
     @GetMapping("/user/{id0}/desktop")
     public String getAlbum(@PathVariable long id0, Model model) {
         Optional<User> user = userRep.findById(id0);
-        Optional<Folder> folder = folderRep.findById(id0);
         model.addAttribute("folder", user.get().getFolderSet());
         model.addAttribute("id0", id0);
         return "desktop";
     }
-    @GetMapping("/user/{id0}/folder/add")
-    public String getFolder(@PathVariable long id0) {
-        return "folderAdd";
-    }
-    @PostMapping("/user/{id0}/folder/add")
+
+    @PostMapping("/user/{id0}/desktop")
     public String postFolder(@PathVariable long id0, @RequestParam("name") String name, Model model) {
         Optional<User> userOptional = userRep.findById(id0);
         if (userOptional.isPresent()){
             User user = userOptional.get();
             Folder folder = new Folder();
             folder.setName(name);
+            folder.setIsDelete(false);
+            model.addAttribute("name", name);
+            model.addAttribute("folder", userOptional.get().getFolderSet());
+            model.addAttribute("id0", id0);
             user.addFolder(folder);
             userRep.save(user);
         }
-        return "folderAdd";
+        return "desktop";
     }
+
+
+    @GetMapping("/user/{id0}/bin")
+    public String getBin(@PathVariable long id0, Model model) {
+        Optional<User> user = userRep.findById(id0);
+        Set<Folder> folders = user.get().getFolderSet();
+        //Найти все проекты, у которых поле isDelete = true;
+        //Найти все заметки, у которых поле isDelete = true;
+        model.addAttribute("folder", user.get().getFolderSet());
+        model.addAttribute("id0", id0);
+        return "bin";
+    }
+
 
     @GetMapping("/user/{id0}/folder/{id1}/edit")
     public String editFolderGet(@PathVariable long id0, @PathVariable long id1, Model model) {
@@ -106,12 +161,14 @@ public class MiniNotesController {
             Optional<Folder> folderOptional = folderRep.findById(id1);
             Folder folder = folderOptional.get();
             folder.setName(name);
-            model.addAttribute("folder", folder);
+            //model.addAttribute("folder", folder);
+            model.addAttribute("name", name);
             model.addAttribute("id0", id0);
             model.addAttribute("id1", id1);
+            System.out.println(folder.getName());
             folderRep.save(folder);
         }
-        return "notesEdit";
+        return "notes";
     }
 
     @GetMapping("/user/{id0}/folder/{id1}/delete")
@@ -121,12 +178,28 @@ public class MiniNotesController {
             User user = userOptional.get();
             Optional<Folder> folderOptional = folderRep.findById(id1);
             Folder folder = folderOptional.get();
-            user.removeFolder(folder);
-            userRep.save(user);
+            folder.setIsDelete(true);
+            //user.removeFolder(folder);
+            //userRep.save(user);
+            folderRep.save(folder);
         }
-        return "desktop";
+        return "success";
     }
 
+
+    @PostMapping("/user/{id0}/folder/{id1}/notes")
+    public String postNotes(@PathVariable long id0, @PathVariable long id1,
+                            @RequestParam("name") String name, Model model) {
+        Optional<Folder> folderOptional = folderRep.findById(id1);
+        Folder folder = folderOptional.get();
+        folder.setName(name);
+        model.addAttribute("name", name);
+        model.addAttribute("id0", id0);
+        model.addAttribute("id1", id1);
+        model.addAttribute("note", folderOptional.get().getNoteSet());
+        folderRep.save(folder);
+        return "notes";
+    }
 
     @GetMapping("/user/{id0}/folder/{id1}/notes")
     public String getNotes(@PathVariable long id0, @PathVariable long id1, Model model) {
@@ -152,9 +225,10 @@ public class MiniNotesController {
             Note note = new Note();
             note.setTitle(title);
             note.setBody(body);
-            note.setDelete(false);
+            note.setIsDelete(false);
             String date = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy").format(new Date());
             note.setCreateDateTime(date);
+
             folder.addNote(note);
             user.addFolder(folder);
             folderRep.save(folder);
@@ -164,14 +238,30 @@ public class MiniNotesController {
     }
 
 
+
+    @PostMapping("/user/{id0}/profile")
+    public String profilePost(@PathVariable long id0,
+                              @RequestParam("name") String name,
+                              Model model){
+        Optional<User> userOptional = userRep.findById(id0);
+        User user = userOptional.get();
+        user.setName(name);
+        model.addAttribute("name", name);
+        System.out.println(user.getName() + ' ' + user.getPassword());
+        userRep.save(user);
+        return "profile";
+    }
+
     @GetMapping("/user/{id0}/profile")
     public String getProfile(@PathVariable long id0, Model model) {
         Optional<User> userOptional = userRep.findById(id0);
         User user = userOptional.get();
         model.addAttribute("id0", id0);
-        model.addAttribute("user", user);
+        model.addAttribute("name", user.getName());
         return "profile";
     }
+
+
     @GetMapping("/user/{id0}/profile/delete")
     public String deleteProfile(@PathVariable long id0, Model model) {
         Optional<User> userOptional = userRep.findById(id0);
@@ -205,10 +295,10 @@ public class MiniNotesController {
         return "profileEdit";
     }
 
-    @GetMapping("/user/{id0}/bin")
-    public String geBinProfile(@PathVariable long id0, Model model) {
-        return "bin";
-    }
+ //   @GetMapping("/user/{id0}/bin")
+  //  public String geBinProfile(@PathVariable long id0, Model model) {
+ //       return "bin";
+ //   }
 /*
     @GetMapping("/groups/{id0}/albums/add")
     public String crAlbum(@PathVariable long id0) {

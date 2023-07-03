@@ -4,24 +4,39 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <style>
-        body {background-color: #FFDBC5;
+        body {
             font-size:20px;
             font-family: "Tahoma";}
         a {color:#000000; text-decoration:none;}
+        table {
+            border: 1px solid grey;
+            width: 100%;
+        }
     </style>
 </head>
 <body>
-<form method="GET", action="/admin/users">
-    <h2 align="center">Список пользователей</h2>
-    <table th:if="${not #lists.isEmpty(users)}">
-        <tr th:each="user : ${users}">
-            <td>
-                <a th:href="@{/user/{userId}/desktop(userId = ${user.id})}"><span th:text="${user.id + ' | ' + user.name + '   ' + user.password}"></span></a>
-            </td>
-        </tr>
-    </table>
-</form>
+<table border="1" width="100%" cellpadding="10"><caption>Таблица пользователей</caption>
+    <tbody th:if="${not #lists.isEmpty(users)}">
+    <tr>
+        <td>Ссылка</td>
+        <td>Id</td>
+        <td>Имя</td>
+        <td>Пароль</td>
+        <td>Роль</td>
+        <td>Статус</td>
+    </tr>
+    <tr th:each="user : ${users}">
+        <td><a th:href="@{/user/{userId}/desktop(userId = ${user.id})}"><span th:text="${'http://localhost:8081/user/' + user.id + '/desktop'}"></span></a></td>
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.name}"></td>
+        <td th:text="${user.password}"></td>
+        <td th:text="${user.getRole()}"></td>
+        <td th:text="${user.getStatus()}"></td>
+    </tr>
+    </tbody>
+</table>
 <br>
+
 <p align="center"><button type="submit" class="btn btn-light"> <a th:href="@{/registration}">Добавить нового пользователя</a></button></p>
 </body>
 </html>

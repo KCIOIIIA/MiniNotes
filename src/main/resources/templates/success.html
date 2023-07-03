@@ -75,16 +75,18 @@
       font-size:20px;
       box-sizing: border-box;
       padding: 20px;
-      height: 70px;
+      height: 100%;
       text-align: center;
       width: 700px;
 
       display: grid; /* display:flex works too since body is the only grid cell */
       margin: auto;
     }
-    .center{
-      display: grid; /* display:flex works too since body is the only grid cell */
-      margin: auto;
+    .minitext {
+      color: #939393;
+      font-family: "Tahoma";
+      font-size: 10px;
+      text-align: center;
     }
   </style>
 </head>
@@ -93,81 +95,19 @@
   <a th:href="@{/user/{userId}/desktop(userId = ${id0})}">
     <img class="static" th:src="@{/png/home.png}" alt="" width = 55px height = 55px>
     <img th:src="@{/png/home.gif}" alt="" width = 55px height = 55px></a>
-    <a th:href="@{/user/{userId}/profile(userId = ${id0})}">
-      <img class="static" th:src="@{/png/user.png}" alt="" width = 55px height = 55px>
-      <img th:src="@{/png/user.gif}" alt="" width = 55px height = 55px></a>
-    <a th:href="@{/user/{userId}/bin(userId = ${id0})}">
-      <img th:src="@{/png/bin_activ.png}" alt="" width = 55px height = 55px></a>
-    <a th:href="@{/}">
-      <img class="static" th:src="@{/png/exit.png}" alt="" width = 55px height = 55px>
-      <img th:src="@{/png/exit.gif}" alt="" width = 55px height = 55px></a>
+  <a th:href="@{/user/{userId}/profile(userId = ${id0})}">
+    <img class="static" th:src="@{/png/user.png}" alt="" width = 55px height = 55px>
+    <img th:src="@{/png/user.gif}" alt="" width = 55px height = 55px></a>
+  <a th:href="@{/user/{userId}/bin(userId = ${id0})}">
+    <img th:src="@{/png/bin_activ.png}" alt="" width = 55px height = 55px></a>
+  <a th:href="@{/}">
+    <img class="static" th:src="@{/png/exit.png}" alt="" width = 55px height = 55px>
+    <img th:src="@{/png/exit.gif}" alt="" width = 55px height = 55px></a>
 </div>
-
-<br>
-
-<div class="center">
-
-<table th:if="${not #lists.isEmpty(folder)}">
-  <tr th:each="f : ${folder}">
-    <td th:if="${f.getIsDelete() == true}"><div class="form">
-        <span th:text="${f.name}"></span>
-    </div>
-    </td>
-  </tr>
-</table>
-
+<br><br><br><br><br><br>
+<div class="form">
+<p>Проект удалён и теперь не будет отображаться на рабочем столе!</p>
+<p class="minitext">Для восстановления проекта или полного его удаления посетите раздел "Корзина" в меню сайта.</p>
 </div>
-
-
-<div class="btn-up btn-up_hide"></div>
-<script>
-  const btnUp = {
-    el: document.querySelector('.btn-up'),
-    scrolling: false,
-    show() {
-      if (this.el.classList.contains('btn-up_hide') && !this.el.classList.contains('btn-up_hiding')) {
-        this.el.classList.remove('btn-up_hide');
-        this.el.classList.add('btn-up_hiding');
-        window.setTimeout(() => {
-          this.el.classList.remove('btn-up_hiding');
-        }, 300);
-      }
-    },
-    hide() {
-      if (!this.el.classList.contains('btn-up_hide') && !this.el.classList.contains('btn-up_hiding')) {
-        this.el.classList.add('btn-up_hiding');
-        window.setTimeout(() => {
-          this.el.classList.add('btn-up_hide');
-          this.el.classList.remove('btn-up_hiding');
-        }, 300);
-      }
-    },
-    addEventListener() {
-      window.addEventListener('scroll', () => {
-        const scrollY = window.scrollY || document.documentElement.scrollTop;
-        if (this.scrolling && scrollY > 0) {
-          return;
-        }
-        this.scrolling = false;
-        if (scrollY > 400) {
-          this.show();
-        } else {
-          this.hide();
-        }
-      });
-      document.querySelector('.btn-up').onclick = () => {
-        this.scrolling = true;
-        this.hide();
-        window.scrollTo({
-          top: 0,
-          left: 0,
-          behavior: 'smooth'
-        });
-      }
-    }
-  }
-
-  btnUp.addEventListener();
-</script>
 </body>
 </html>

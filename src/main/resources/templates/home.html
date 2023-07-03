@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body{
+      background: #B0E1D0;
+    }
+    #tekst_sverhu_kartinki {
+      position: relative;
+      text-align: center;
+    }
+    .tekst_sverhu_kartinki_1 {
+      position: absolute;
+      bottom: 28%;
+      text-transform: uppercase;
+      text-align: center;
+      width: 30%;
+      margin-left: 66%;
+    }
+    .tekst_sverhu_kartinki_1 span {
+      font: bold 24px/44px Helvetica, Sans-Serif;
+      padding: 8px;
+      text-align: center;
+    }
+    a {
+      color: #33cccc;
+      position: relative;
+      text-decoration: none;
+    }
+    a:after{
+      content: "";
+      display: block;
+      position: relative;
+      width: 60%;
+      margin: auto;
+      border-bottom: 3px dashed #000000;
+      bottom: -3px;
+      transition: .5s ease-in-out;
+    }
+    a:hover:after {
+      width: 0;
+    }
+  </style>
+</head>
+<body>
+
+<div id="tekst_sverhu_kartinki">
+  <img th:src="@{/png/writer0.png}" alt="" width = 90%>
+  <div class="tekst_sverhu_kartinki_1">
+    <span><a th:href="@{/login}">Вход</a></span>
+    <br><br><br>
+    <span><a th:href="@{/registration}">Регистрация</a></span>
+  </div>
+</div>
+
+</body>
+</html>
