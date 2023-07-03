@@ -146,6 +146,26 @@ public String index(){
         return "bin";
     }
 
+    @GetMapping("/user/{id0}/bin/delete")
+    public String getBinDelete(@PathVariable long id0, Model model) {
+        Optional<User> userOptional = userRep.findById(id0);
+        if (userOptional.isPresent()){
+            User user = userOptional.get();
+            Set<Folder> folderSet = user.getFolderSet();
+
+            for(Folder folder: folderSet){
+                if (!folder.equals(null)) {
+                    if (folder.getIsDelete()) {
+                        user.removeFolder(folder);
+                        folderRep.save(folder);
+                    }
+                }
+            }
+            userRep.save(user);
+        }
+        return "bin";
+    }
+
 
     @GetMapping("/user/{id0}/folder/{id1}/edit")
     public String editFolderGet(@PathVariable long id0, @PathVariable long id1, Model model) {
@@ -228,7 +248,7 @@ public String index(){
             note.setIsDelete(false);
             String date = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy").format(new Date());
             note.setCreateDateTime(date);
-
+            note.setUpdateDateTime(date);
             folder.addNote(note);
             user.addFolder(folder);
             folderRep.save(folder);
@@ -278,49 +298,40 @@ public String index(){
     }
     @PostMapping("/user/{id0}/profile/edit")
     public String editProfile(@PathVariable long id0,
-                              //@RequestParam("passwordOld") String passwordOld,
-                              @RequestParam("name") String name,
-                              @RequestParam("password") String password,
+                              @RequestParam("passwordOld") String passwordOld,
+                              @RequestParam("password0") String password0,
+                              @RequestParam("password1") String password1,
                               Model model) {
         Optional<User> userOptional = userRep.findById(id0);
-        //User userOp = userOptional.get();
-        //User user = new User();
         User user = userOptional.get();
-        user.setName(name);
-        user.setPassword(password);
-        //model.addAttribute("passwordOld", userOp.getPassword());
-        model.addAttribute("user", user);
+        System.out.println("Пароль: "+user.getPassword());
+
         model.addAttribute("id0", id0);
-        userRep.save(user);
-        return "profileEdit";
+        model.addAttribute("passwordOld", passwordOld);
+        model.addAttribute("password0", password0);
+        model.addAttribute("password1", password1);
+
+        if (!passwordOld.equals(user.getPassword())){
+            return "editError0";
+        } else {
+            if (!password0.equals(password1)){
+                return "editError1";
+            }
+            else{
+                if (password0.isEmpty()){
+                    return "editError3";
+                } else {
+                    user.setPassword(password0);
+                    userRep.save(user);
+                    return "profileEditSec";
+                }
+            }
+        }
     }
 
  //   @GetMapping("/user/{id0}/bin")
   //  public String geBinProfile(@PathVariable long id0, Model model) {
  //       return "bin";
  //   }
-/*
-    @GetMapping("/groups/{id0}/albums/add")
-    public String crAlbum(@PathVariable long id0) {
-        return "albumAdd";
-    }
-    @PostMapping("/groups/{id0}/albums/add")
-    public String addAlbum(@PathVariable long id0, @RequestParam("name") String name,
-                           @RequestParam("years") String years, Model model) {
-        Optional<Group> groupOptional = groupRepository.findById(id0);
-        System.out.println(name + " " + years);
-        if (groupOptional.isPresent()){
-            Group group = groupOptional.get();
-            Album album = new Album();
-            album.setName(name);
-            album.setYears(years);
-            group.addAlbum(album);
-            groupRepository.save(group);
-        }
-        return "albumAdd";
-    }
-
- */
-
 
 }

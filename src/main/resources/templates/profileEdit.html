@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ru" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    .beautiful {
+      width: 360px;
+      padding: 8% 0 0;
+      margin: auto;
+      border-radius: 20px;
+    }
+    .beautifulIn {
+      position: relative;
+      z-index: 1;
+      background: #FFFFFF;
+      max-width: 360px;
+      margin: 0 auto 100px;
+      padding: 45px;
+      text-align: center;
+      box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24);
+      border-radius: 20px;
+    }
+    .beautifulIn input {
+      outline: 0;
+      background: #f2f2f2;
+      width: 100%;
+      border: 0;
+      margin: 0 0 15px;
+      padding: 15px;
+      box-sizing: border-box;
+      font-size: 14px;
+      border-radius: 20px;
+    }
+    .form button {
+      font-family: "Tahoma";
+      text-transform: uppercase;
+      outline: 0;
+      background: #B0E1D0;
+      width: 100%;
+      border: 0;
+      padding: 15px;
+      color: #FFFFFF;
+      font-size: 14px;
+      cursor: pointer;
+      border-radius: 20px;
+    }
+    .form button:hover,.form button:active,.form button:focus {
+      background: #33cccc;
+      border-radius: 20px;
+    }
+    body {
+      background: #B0E1D0;
+      font-size:20px;
+    }
+    .mini {
+      color: #939393;
+      font-family: "Tahoma";
+      font-size: 10px;
+      text-align: center;
+    }
+    button{
+      border-radius: 20px;
+    }
+    a {color:#939393; text-decoration:none;}
+  </style>
+</head>
+<body>
+<div class="beautiful">
+  <div class="beautifulIn">
+    <form align="center" method="POST" th:action="@{/user/{userId}/profile/edit(userId = ${id0})}">
+      <input name="passwordOld" type="text" id="passwordOld" class="form-control" placeholder="Текущий пароль"/>
+      <input name="password0" type="text" id="password0" class="form-control" placeholder="Новый пароль"/>
+      <input name="password1" type="text" id="password1" class="form-control" placeholder="Повторите новый пароль"/>
+      <button type="submit">Сменить пароль</button>
+    </form>
+
+    <br><br>
+    <div class="mini">
+      <a th:href="@{/user/{userId}/profile(userId = ${id0})}">Вернуться в профиль</a>
+    </div>
+  </div>
+</div>
+</body>
+</html>
