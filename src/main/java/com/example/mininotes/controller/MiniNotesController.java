@@ -14,10 +14,33 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
+
+
+import java.security.Principal;
+import java.util.Date;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 public class MiniNotesController {
     //ОБЩИЕ
+    @Autowired
+    UserRep userRep;
+    @Autowired
+    FolderRep folderRep;
+    @Autowired
+    NoteRep noteRep;
 
     /*
     @GetMapping(value = "/")
@@ -63,10 +86,6 @@ public String index(){
     public String login(){
         return "login";
     }
-    @PostMapping("/login")
-    public String postlogin(Model model){
-        return "login";
-    }
     @GetMapping("/registration")
     public String crUser(){
         return "registration";
@@ -80,12 +99,14 @@ public String index(){
         user.setPassword(password);
         user.setRole(Role.USER);
         user.setStatus(Status.ACTIV);
+        user.setCountFolders(1);
+        user.setCountNotes(0);
+        System.out.println("В регистрации на post");
         model.addAttribute("user", user);
         model.addAttribute("password0", password0);
         if (!password.equals(password0)){
             return "registration_error";
         } else {
-            //Создать для каждого пользователя начальный проект и заметку
             userRep.save(user);
             Optional<User> userOptional = userRep.findById(user.getId());
             User user1 = userOptional.get();
@@ -103,12 +124,31 @@ public String index(){
         return "admin_users";
     }
 
-    @Autowired
-    UserRep userRep;
-    @Autowired
-    FolderRep folderRep;
-    @Autowired
-    NoteRep noteRep;
+    @GetMapping("/admin/{id0}/role")
+    public String getUserRole(@PathVariable long id0, Model model){
+        Optional<User> userOptional = userRep.findById(id0);
+        User user = userOptional.get();
+        if (user.getRole().equals(Role.USER)){
+            user.setRole(Role.ADMIN);}
+        else {
+            user.setRole(Role.USER);
+        }
+        userRep.save(user);
+        return "admin_role";
+    }
+    @GetMapping("/admin/{id0}/status")
+    public String getUsertatus(@PathVariable long id0, Model model){
+        Optional<User> userOptional = userRep.findById(id0);
+        User user = userOptional.get();
+        if (user.getStatus().equals(Status.ACTIV)){
+            user.setStatus(Status.BLOCKED);}
+        else {
+            user.setStatus(Status.ACTIV);
+        }
+        userRep.save(user);
+        return "admin_role";
+    }
+
     @GetMapping("/user/{id0}/desktop")
     public String getAlbum(@PathVariable long id0, Model model) {
         Optional<User> user = userRep.findById(id0);
@@ -125,6 +165,9 @@ public String index(){
             Folder folder = new Folder();
             folder.setName(name);
             folder.setIsDelete(false);
+            int k = user.getCountFolders();
+            k++;
+            user.setCountFolders(k);
             model.addAttribute("name", name);
             model.addAttribute("folder", userOptional.get().getFolderSet());
             model.addAttribute("id0", id0);
@@ -142,6 +185,12 @@ public String index(){
         //Найти все проекты, у которых поле isDelete = true;
         //Найти все заметки, у которых поле isDelete = true;
         model.addAttribute("folder", user.get().getFolderSet());
+       // for(Folder folder: folders){
+           // Optional<Folder> f = folderRep.findById(folder.getId());
+            //Set<Note> notes = f.get().getNoteSet();
+           // model.addAttribute("id1", f.get().getId());
+           // model.addAttribute("note", f.get().getNoteSet());
+      //  }
         model.addAttribute("id0", id0);
         return "bin";
     }
@@ -151,19 +200,15 @@ public String index(){
         Optional<User> userOptional = userRep.findById(id0);
         if (userOptional.isPresent()){
             User user = userOptional.get();
-            Set<Folder> folderSet = user.getFolderSet();
-
+            Set<Folder> folderSet = user.getFolderSet().stream().
+                    filter(folder -> folder.getIsDelete()).collect(Collectors.toSet());
             for(Folder folder: folderSet){
-                if (!folder.equals(null)) {
-                    if (folder.getIsDelete()) {
-                        user.removeFolder(folder);
-                        folderRep.save(folder);
-                    }
-                }
+                        folder.setUser(null);
             }
+            folderSet.clear();
             userRep.save(user);
         }
-        return "bin";
+        return "redirect:/user/" + id0 + "/bin";
     }
 
 
@@ -191,6 +236,54 @@ public String index(){
         return "notes";
     }
 
+    @GetMapping("/user/{id0}/folder/{id1}/note/{id2}")
+    public String editNoteGet(@PathVariable long id0, @PathVariable long id1,
+                              @PathVariable long id2, Model model) {
+        Optional<Note> noteOptional = noteRep.findById(id2);
+        Note note = noteOptional.get();
+        model.addAttribute("id0", id0);
+        model.addAttribute("id1", id1);
+        model.addAttribute("id2", id2);
+        model.addAttribute("title", note.getTitle());
+        model.addAttribute("contentbox", note.getBody());
+        model.addAttribute("updateDateTime", note.getUpdateDateTime());
+        return "editor";
+    }
+    @PostMapping("/user/{id0}/folder/{id1}/note/{id2}")
+    public String editNotePost(@PathVariable long id0, @PathVariable long id1,
+                               @PathVariable long id2,
+                               @RequestParam("title") String title,
+                               @RequestParam("contentbox") String body,
+                               Model model) {
+        Optional<Note> noteOptional = noteRep.findById(id2);
+        Note note = noteOptional.get();
+        note.setTitle(title);
+        note.setBody(body);
+        model.addAttribute("id0", id0);
+        model.addAttribute("id1", id1);
+        model.addAttribute("id2", id2);
+        model.addAttribute("title", note.getTitle());
+        model.addAttribute("contentbox", note.getBody());
+        String date = new SimpleDateFormat("HH:mm:ss dd-MM-yyyy").format(new Date());
+        note.setUpdateDateTime(date);
+        noteRep.save(note);
+        return "editor";
+    }
+
+    @GetMapping("/user/{id0}/folder/{id1}/note/{id2}/delete")
+    public String deleteNoteGet(@PathVariable long id0, @PathVariable long id1,
+                              @PathVariable long id2, Model model) {
+        Optional<Note> noteOptional = noteRep.findById(id2);
+        Optional<User> userOptional = userRep.findById(id0);
+        Note note = noteOptional.get();
+        note.setIsDelete(true);
+        int k = userOptional.get().getCountNotes();
+        k--;
+        userOptional.get().setCountNotes(k);
+        noteRep.save(note);
+        return "notes";
+    }
+
     @GetMapping("/user/{id0}/folder/{id1}/delete")
     public String deleteFolder(@PathVariable long id0, @PathVariable long id1, Model model) {
         Optional<User> userOptional = userRep.findById(id0);
@@ -199,11 +292,49 @@ public String index(){
             Optional<Folder> folderOptional = folderRep.findById(id1);
             Folder folder = folderOptional.get();
             folder.setIsDelete(true);
-            //user.removeFolder(folder);
-            //userRep.save(user);
+            int k = user.getCountFolders();
+            k--;
+            user.setCountFolders(k);
+            int n = user.getCountNotes();
+            n = n - folder.getNoteSet().size();
+            user.setCountNotes(n);
             folderRep.save(folder);
         }
         return "success";
+    }
+
+    @GetMapping("/user/{id0}/folder/{id1}/bin/delete")
+    public String deleteBinFolder(@PathVariable long id0, @PathVariable long id1, Model model) {
+        Optional<User> userOptional = userRep.findById(id0);
+        if (userOptional.isPresent()){
+            User user = userOptional.get();
+            Optional<Folder> folderOptional = folderRep.findById(id1);
+            Folder folder = folderOptional.get();
+            //folder.setIsDelete(true);
+            user.removeFolder(folder);
+            userRep.save(user);
+            folderRep.save(folder);
+        }
+        return "success0";
+    }
+    @GetMapping("/user/{id0}/folder/{id1}/bin/edit")
+    public String editBinFolder(@PathVariable long id0, @PathVariable long id1, Model model) {
+        Optional<User> userOptional = userRep.findById(id0);
+        if (userOptional.isPresent()){
+            User user = userOptional.get();
+            Optional<Folder> folderOptional = folderRep.findById(id1);
+            Folder folder = folderOptional.get();
+            folder.setIsDelete(false);
+            int k = user.getCountFolders();
+            k++;
+            user.setCountFolders(k);
+            int n = user.getCountNotes();
+            n = n + folder.getNoteSet().size();
+            user.setCountNotes(n);
+            userRep.save(user);
+            folderRep.save(folder);
+        }
+        return "success1";
     }
 
 
@@ -250,6 +381,9 @@ public String index(){
             note.setCreateDateTime(date);
             note.setUpdateDateTime(date);
             folder.addNote(note);
+            int k = user.getCountNotes();
+            k++;
+            user.setCountNotes(k);
             user.addFolder(folder);
             folderRep.save(folder);
             userRep.save(user);
@@ -278,6 +412,8 @@ public String index(){
         User user = userOptional.get();
         model.addAttribute("id0", id0);
         model.addAttribute("name", user.getName());
+        model.addAttribute("countFolders", user.getCountFolders());
+        model.addAttribute("countNotes", user.getCountNotes());
         return "profile";
     }
 
@@ -289,8 +425,6 @@ public String index(){
         userRep.delete(user);
         return "index";
     }
-
-    //ПРОБЛЕМЫ
 
     @GetMapping("/user/{id0}/profile/edit")
     public String getEditProfile(@PathVariable long id0, Model model) {
@@ -328,10 +462,4 @@ public String index(){
             }
         }
     }
-
- //   @GetMapping("/user/{id0}/bin")
-  //  public String geBinProfile(@PathVariable long id0, Model model) {
- //       return "bin";
- //   }
-
 }

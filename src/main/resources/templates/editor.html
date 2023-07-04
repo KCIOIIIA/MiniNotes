@@ -1,0 +1,487 @@
+<!DOCTYPE HTML>
+<html lang="ru" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link th:href="@{/css/style.css}" rel="stylesheet"/>
+  <style>
+    body{
+      background: #B0E1D0;
+      font-size:20px;
+      font-family: "Zametka_Parletter Regular";
+    }
+    .navbar {
+      border-color: #33cccc;
+      border-style: solid;
+      display: flex;
+      column-gap: 25px;
+      overflow: hidden;
+      justify-content: space-between;
+      background-color: #FFFFFF;
+      font-family: Impact;
+      text-align: center;
+      padding-right: 10%;
+      padding-left: 10%;
+    }
+    .navbar a {
+      float: left;
+      font-size: 10px;
+      color: #B0E1D0;
+      text-align: center;
+      text-decoration: none;
+    }
+    .static {
+      position: absolute;
+      background: white;
+    }
+    .static:hover {
+      opacity: 0;
+    }
+    @media screen and (max-width: 1835px) {
+      .btn-up {
+        position: fixed;
+        background-color: #000000;
+        left: 20px;
+        bottom: 0px;
+        border-top-left-radius: 8px;
+        border-top-right-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: opacity 0.3s ease-in-out;
+        width: 60px;
+        height: 50px;
+        opacity: 1;
+      }
+      .btn-up::before {
+        content: "";
+        width: 40px;
+        height: 40px;
+        background-size: 100% 100%;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23fff' viewBox='0 0 16 16'%3E%3Cpath fill-rule='evenodd' d='M7.646 4.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1-.708.708L8 5.707l-5.646 5.647a.5.5 0 0 1-.708-.708l6-6z'/%3E%3C/svg%3E");
+      }
+      .btn-up_hide {
+        display: none;
+      }
+      @media (hover: hover) and (pointer: fine) {
+        .btn-up:hover {
+          background-color: #33cccc;
+        }
+      }
+    }
+    .form {
+      background-color: #FFFFFF;
+      border-radius: 20px;
+      font-size:20px;
+      box-sizing: border-box;
+      padding: 20px;
+      height: 100%;
+      text-align: center;
+      width: 300px;
+
+    }
+    .form0 {
+      background-color: #FFFFFF;
+      border-radius: 20px;
+      font-size:20px;
+      box-sizing: border-box;
+      padding: 10px;
+      height: 100%;
+
+      display: grid; /* display:flex works too since body is the only grid cell */
+      margin: auto;
+    }
+    .center{
+      display: grid; /* display:flex works too since body is the only grid cell */
+      margin: auto;
+    }
+    .data{
+      text-align: right;
+      font-size:10px;
+    }
+    .titleNote{
+      text-align: left;
+      font-size:20px;
+      color: #000000;
+      position: relative;
+      text-decoration: none;
+    }
+    .body_body{
+      font-size:20px;
+      text-align: center;
+      font-family: "Zametka_Parletter Regular";
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      max-width: 650px;
+    }
+
+    input[type=text]{
+      width: 100%;
+      padding: 12px 20px;
+      margin: 8px 0;
+      display: inline-block;
+      box-sizing: border-box;
+      border-radius: 20px;
+      font-family: "Tahoma";
+    }
+    button {
+      background-color: #FFFFFF;
+      color: #000000;
+      padding: 14px 20px;
+      margin: 8px 0;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      border-radius: 20px;
+      font-family: "Tahoma";
+    }
+    .container{
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        padding: 20px;
+        border-radius: 20px;
+        margin: auto;
+    }
+
+    #con1{
+        width: 40%;
+        height: 100%;
+        background-color: #FFFFFF;
+        border-right: 0px;
+        border-radius: 20px;
+        padding: 10px;
+        margin: 5%;
+        opacity: 70%;
+    }
+
+    #con2{
+        width: 40%;
+        background-color: #FFFFFF;
+        height: 100%;
+        border-radius: 20px;
+        padding: 10px;
+        margin: 5%;
+    }
+    #bar
+    {
+        background-color:#5fbbde;
+        width:0px;
+        height:16px;
+    }
+    #barbox
+    {
+        float:right;
+        height:16px;
+        background-color:#FFFFFF;
+        width:100px;
+        border:solid 2px #000;
+        margin-right:3px;
+        -webkit-border-radius:5px;-moz-border-radius:5px;
+    }
+    #count
+    {
+        float:right; margin-right:8px;
+        font-family: "Tahoma";
+        font-size:16px;
+        color:#666666
+    }
+    #contentbox
+    {
+        font-family: "Tahoma";
+        outline: 0;
+        background: #f2f2f2;
+        width: 100%;
+        border: 0;
+        margin: 0 0 15px;
+        padding: 15px;
+        box-sizing: border-box;
+        font-size: 14px;
+        white-space: pre-wrap;
+    }
+    input[type=text]{
+        width: 100%;
+        padding: 12px 20px;
+        margin: 8px 0;
+        display: inline-block;
+        box-sizing: border-box;
+        border-radius: 20px;
+        font-family: "Tahoma";
+    }
+    button {
+        background-color: #FFFFFF;
+        color: #000000;
+        padding: 14px 20px;
+        margin: 8px 0;
+        border: none;
+        cursor: pointer;
+        width: 100%;
+        border-radius: 20px;
+        font-family: "Tahoma";
+    }
+    /* Extra styles for the cancel button */
+    .cancelbtn {
+        width: auto;
+        padding: 10px 18px;
+        background-color: #FFA494;
+        border-radius: 20px;
+        font-family: "Tahoma";
+    }
+
+    /* Center the image and position the close button */
+    .imgcontainer {
+        text-align: center;
+        margin: 24px 0 12px 0;
+        position: relative;
+        border-radius: 20px;
+    }
+
+    .container0 {
+        padding: 16px;
+        border-radius: 20px;
+        font-family: "Tahoma";
+    }
+    /* The Modal (background) */
+    .modal {
+        display: none; /* Hidden by default */
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        left: 0;
+        top: 0;
+        width: 100%; /* Full width */
+        height: 100%; /* Full height */
+        overflow: auto; /* Enable scroll if needed */
+        background-color: rgb(0,0,0); /* Fallback color */
+        background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+        padding-top: 60px;
+        border-radius: 20px;
+        font-family: "Tahoma";
+    }
+
+    /* Modal Content/Box */
+    .modal-content {
+        background-color: #FFFFFF;
+        margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+        width: 50%; /* Could be more or less, depending on screen size */
+        border-radius: 20px;
+        font-family: "Tahoma";
+    }
+
+    /* The Close Button (x) */
+    .close {
+        position: absolute;
+        right: 25px;
+        top: 0;
+        color: #000;
+        font-size: 35px;
+        font-family: "Tahoma";
+    }
+
+    .close:hover,
+    .close:focus {
+        color: #FFA494;
+        cursor: pointer;
+        border-radius: 20px;
+    }
+
+    /* Add Zoom Animation */
+    .animate {
+        -webkit-animation: animatezoom 0.6s;
+        animation: animatezoom 0.6s
+    }
+
+    @-webkit-keyframes animatezoom {
+        from {-webkit-transform: scale(0)}
+        to {-webkit-transform: scale(1)}
+    }
+
+    @keyframes animatezoom {
+        from {transform: scale(0)}
+        to {transform: scale(1)}
+    }
+
+    /* Change styles for span and cancel button on extra small screens */
+    @media screen and (max-width: 300px) {
+        .cancelbtn {
+            width: 100%;
+        }
+    }
+    .signupbtn{
+        background-color: #c1e960;
+        border-radius: 20px;
+    }
+    .center{
+        display: grid; /* display:flex works too since body is the only grid cell */
+        margin: auto;
+    }
+    .delete{
+        color: #FFA494;
+    }
+  </style>
+</head>
+<body>
+<div class="navbar">
+  <a th:href="@{/user/{userId}/desktop(userId = ${id0})}">
+      <img class="static" th:src="@{/png/home.png}" alt="" width = 55px height = 55px>
+      <img th:src="@{/png/home.gif}" alt="" width = 55px height = 55px></a>
+  <a th:href="@{/user/{userId}/profile(userId = ${id0})}">
+    <img class="static" th:src="@{/png/user.png}" alt="" width = 55px height = 55px>
+    <img th:src="@{/png/user.gif}" alt="" width = 55px height = 55px></a>
+  <a th:href="@{/user/{userId}/bin(userId = ${id0})}">
+    <img class="static" th:src="@{/png/bin.png}" alt="" width = 55px height = 55px>
+    <img th:src="@{/png/bin.gif}" alt="" width = 55px height = 55px></a>
+  <a th:href="@{/}">
+    <img class="static" th:src="@{/png/exit.png}" alt="" width = 55px height = 55px>
+    <img th:src="@{/png/exit.gif}" alt="" width = 55px height = 55px></a>
+</div>
+<br>
+
+
+<div class="container">
+    <div id="con1" th:action="@{/user/{userId}/folder/{folderId}/note/{noteId}(userId = ${id0}, folderId = ${id1}, noteId = ${id2})}">
+        <div class="titleNote">
+            <span th:text="${title}"></span>
+        </div>
+        <br>
+        <div class="body_body">
+            <span style="max-width: 400px" th:text="${contentbox}"></span>
+        </div>
+        <div class="data">
+            <br><br>
+            <span th:text="${UpdateDateTime}"></span>
+        </div>
+    </div>
+    <div id="con2">
+        <div class="center">
+            <div class="form0">
+                <button onclick="document.getElementById('id01').style.display='block'" style="width:auto;">
+                    <img th:src="@{/png/edit_project.gif}" alt="" width = 55px height = 55px></button>
+                <div id="id01" class="modal">
+                    <form class="modal-content animate" th:action="@{/user/{userId}/folder/{folderId}/note/{noteId}(userId = ${id0}, folderId = ${id1}, noteId = ${id2})}" method="POST">
+                        <div class="imgcontainer">
+                            <span onclick="document.getElementById('id01').style.display='none'" class="close">×</span>
+                            <img th:src="@{/png/edit_project.gif}" alt="" width = 55px height = 55px>
+                        </div>
+                        <div class="container0">
+                            <label for="title"><b>Введите название заметки</b></label>
+                            <input type="text" placeholder="Название заметки" name="title" required>
+
+                            <textarea id="contentbox" name="contentbox" placeholder="Заметка"></textarea>
+                            <div>
+                                <div id="count">2000</div>
+                                <div id="barbox">
+                                    <div id="bar"></div>
+                                </div>
+                            </div>
+                            <button type="submit" class="signupbtn">Сохранить изменения</button>
+                        </div>
+                        <div class="container0" style="background-color:#f1f1f1">
+                            <div class="center">
+                                <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Отмена</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="form0">
+                <a th:href="@{/user/{userId}/folder/{folderId}/note/{noteId}/delete(userId = ${id0}, folderId = ${id1}, noteId = ${id2})}" onclick="return confirm('Вы уверены, что хотите безвозвратно удалить заметку?');">
+                    <img th:src="@{/png/bin2.gif}" alt="" width = 55px height = 55px></a>
+            </div>
+        </div>
+
+        <script>
+
+            var modal = document.getElementById('id01');
+
+            window.onclick = function(event) {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            }
+        </script>
+        <script type="text/javascript" src="http://ajax.googleapis.com/
+ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+        <script type="text/javascript">
+            $(document).ready(function()
+            {
+                $("#contentbox").keyup(function()
+                {
+                    var box=$(this).val();
+                    var main = box.length *100;
+                    var value= (main / 2000);
+                    var count= 2000 - box.length;
+
+                    if(box.length <= 2000)
+                    {
+                        $('#count').html(count);
+                        $('#bar').animate(
+                            {
+                                "width": value+'%',
+                            }, 1);
+                    }
+                    else
+                    {
+                        alert('Превышено допустимое количество символов - 2000!');
+                    }
+                    return false;
+                });
+
+            });
+        </script>
+    </div>
+</div>
+
+
+<div class="btn-up btn-up_hide"></div>
+<script>
+  const btnUp = {
+    el: document.querySelector('.btn-up'),
+    scrolling: false,
+    show() {
+      if (this.el.classList.contains('btn-up_hide') && !this.el.classList.contains('btn-up_hiding')) {
+        this.el.classList.remove('btn-up_hide');
+        this.el.classList.add('btn-up_hiding');
+        window.setTimeout(() => {
+          this.el.classList.remove('btn-up_hiding');
+        }, 300);
+      }
+    },
+    hide() {
+      if (!this.el.classList.contains('btn-up_hide') && !this.el.classList.contains('btn-up_hiding')) {
+        this.el.classList.add('btn-up_hiding');
+        window.setTimeout(() => {
+          this.el.classList.add('btn-up_hide');
+          this.el.classList.remove('btn-up_hiding');
+        }, 300);
+      }
+    },
+    addEventListener() {
+      window.addEventListener('scroll', () => {
+        const scrollY = window.scrollY || document.documentElement.scrollTop;
+        if (this.scrolling && scrollY > 0) {
+          return;
+        }
+        this.scrolling = false;
+        if (scrollY > 400) {
+          this.show();
+        } else {
+          this.hide();
+        }
+      });
+      document.querySelector('.btn-up').onclick = () => {
+        this.scrolling = true;
+        this.hide();
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: 'smooth'
+        });
+      }
+    }
+  }
+
+  btnUp.addEventListener();
+</script>
+</body>
+</html>

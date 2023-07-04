@@ -117,6 +117,7 @@
       font-family: "Zametka_Parletter Regular";
       white-space: pre-wrap;
       word-wrap: break-word;
+      max-width: 650px;
     }
     .help{
       text-align: center;
@@ -233,13 +234,14 @@
       background-color: #c1e960;
       border-radius: 20px;
     }
-
+    a {color:#000000; text-decoration:none;}
   </style>
 </head>
 <body>
 <div class="navbar">
   <a th:href="@{/user/{userId}/desktop(userId = ${id0})}">
-    <img th:src="@{/png/home_activ.png}" alt="" width = 55px height = 55px></a>
+    <img class="static" th:src="@{/png/home.png}" alt="" width = 55px height = 55px>
+    <img th:src="@{/png/home.gif}" alt="" width = 55px height = 55px></a>
   <a th:href="@{/user/{userId}/profile(userId = ${id0})}">
     <img class="static" th:src="@{/png/user.png}" alt="" width = 55px height = 55px>
     <img th:src="@{/png/user.gif}" alt="" width = 55px height = 55px></a>
@@ -311,13 +313,13 @@
 
 <table th:if="${not #lists.isEmpty(note)}">
   <tr th:each="n : ${note}">
-    <td><div class="form">
+    <td th:if="${n.getIsDelete() == false}"><div class="form">
       <div class="titleNote">
-        <span th:text="${n.title}"></span>
+        <a th:href="@{/user/{userId}/folder/{folderId}/note/{noteId}(userId = ${id0}, folderId = ${id1}, noteId = ${n.getId()})}"><span th:text="${n.title}"></span></a>
       </div>
       <br>
       <div class="body_body">
-        <span th:text="${n.body}"></span>
+        <span style="max-width: 400px" th:text="${n.body}"></span>
       </div>
       <div class="data">
         <br><br>

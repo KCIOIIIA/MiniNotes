@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -51,6 +52,18 @@
             text-align: center;
             max-width: 600px;
             min-width: 400px;
+            display: grid; /* display:flex works too since body is the only grid cell */
+            margin: auto;
+        }
+        .form1 {
+            background-color: #FFFFFF;
+            border-radius: 20px;
+            font-size:20px;
+            box-sizing: border-box;
+            padding: 10px;
+            max-height: 210px;
+            text-align: center;
+            width: 550px;
             display: grid; /* display:flex works too since body is the only grid cell */
             margin: auto;
         }
@@ -203,7 +216,7 @@
         <img th:src="@{/png/exit.gif}" alt="" width = 55px height = 55px></a>
 </div>
 
-<br><br><br>
+<br>
 
 <img class="rightpic1" th:src="@{/png/user_profile0.gif}" alt="" width = 400px height = 400px>
 
@@ -215,9 +228,18 @@
             <p>Чем я могу Вам помочь?</p>
         </div>
     </div>
-</form>
+    <br>
+    <div class="rtab">
+        <div class="form1">
+            <p>Число проектов:
+                <span th:text="${countFolders}"></span></p>
+            <p>Число заметок:
+                <span th:text="${countNotes}"></span></p>
+        </div>
+    </div>
 
-<br><br><br><br>
+</form>
+<br>
 
 <div class="center">
     <div class="form0">
@@ -274,10 +296,6 @@
         </div>
     </div><br>
 </div>
-
-<br><br><br><br><br><br><br><br>
-
-
 
 </body>
 </html>

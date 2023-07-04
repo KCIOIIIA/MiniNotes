@@ -61,7 +61,7 @@
 <body>
 <div class="beautiful">
     <div class="beautifulIn">
-        <form align="center" method="POST", action="/registration">
+        <form align="center" th:action="@{/registration}" method="POST">
             <input name="name" type="text" id="name" class="form-control" placeholder="Имя"/>
             <input name="password" type="text" id="password" class="form-control" placeholder="Пароль"/>
             <input name="password0" type="text" id="password0" class="form-control" placeholder="Подтвердите пароль"/>

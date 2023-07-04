@@ -1,5 +1,4 @@
 package com.example.mininotes.configuration;
-/*
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,12 +11,13 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class WebSecurityConfig {
+public class WebSecurityConfig {}
+/*
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((requests) -> requests
-                        .requestMatchers("/", "/home").permitAll()
+                        .requestMatchers("/", "/registration").permitAll()
                         .anyRequest().authenticated()
                 )
                 .formLogin((form) -> form
@@ -41,5 +41,53 @@ public class WebSecurityConfig {
         return new InMemoryUserDetailsManager(user);
     }
 }
+
+ */
+/*
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests((requests) -> requests
+                        .requestMatchers("/styles/**", "/images/**", "/node_modules/**","/registration", "/").permitAll()
+                        .anyRequest().authenticated()
+                )
+                .formLogin((form) -> form
+                        .loginPage("/login")
+                        .permitAll()
+                )
+//                .headers().frameOptions().disable();
+                .logout()
+                .logoutSuccessUrl("/");
+//                .logout((logout) -> logout.permitAll());
+        return http.build();
+    }
+
+//    @Bean
+//    public UserDetailsService userDetailsService() {
+//        UserDetails userDetails =
+//                User.withDefaultPasswordEncoder()
+//                        .username("admin")
+//                        .password("password")
+//                        .roles("ADMIN")
+//                        .build();
+//        return new InMemoryUserDetailsManager(userDetails);
+//    }
+
+    @Bean
+    public UserDetailsService userDetailsService(UserRep userRep) {
+        return name -> {
+            Optional<User> user = userRep.getUserByName(name);
+            if (user.isPresent()) {
+                return (UserDetails) user.get();
+            } else {
+                throw new UsernameNotFoundException("Пользователь ‘" + name + "’ не найден");
+            }
+        };
+    }
 
  */

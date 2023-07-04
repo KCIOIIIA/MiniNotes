@@ -87,8 +87,37 @@
       margin: auto;
     }
     a{
-      color: #FFA494;
       text-decoration:none;
+    }
+    .return{
+    }
+    .delete{
+      color: #FFA494;
+    }
+    .help{
+      text-align: right;
+    }
+    .form0 {
+      border-radius: 20px;
+      font-size:20px;
+      box-sizing: border-box;
+      max-height: 210px;
+      text-align: right;
+      width: 600px;
+    }
+    .form1 {
+      background-color: #FFFFFF;
+      font-family: "Tahoma";
+      border-radius: 20px;
+      font-size:20px;
+      box-sizing: border-box;
+      padding: 30px;
+      height: 100px;
+      text-align: center;
+      width: 700px;
+
+      display: grid; /* display:flex works too since body is the only grid cell */
+      margin: auto;
     }
   </style>
 </head>
@@ -112,20 +141,45 @@
 <div class="center">
   <div class="form">
   <a th:href="@{/user/{userId}/bin/delete(userId = ${id0})}" onclick="return confirm('Вы уверены, что хотите очистить корзину?');">
-    Очистить корзину</a>
+    <div class="delete">Очистить корзину</div></a>
   </div>
 
 <table th:if="${not #lists.isEmpty(folder)}">
   <tr th:each="f : ${folder}">
-    <td th:if="${f.getIsDelete() == true}"><div class="form">
+    <td th:if="${f.getIsDelete() == true}"><div class="form1">
         <span th:text="${f.name}"></span>
+      <div class="form0">
+        <div class="help">
+      <a th:href="@{/user/{userId}/folder/{folderId}/bin/delete(userId = ${id0}, folderId = ${f.getId()})}">
+        <img th:src="@{/png/d.gif}" alt="" width = 35px height = 35px></a>
+
+        <a th:href="@{/user/{userId}/folder/{folderId}/bin/edit(userId = ${id0}, folderId = ${f.getId()})}">
+          <img th:src="@{/png/r.gif}" alt="" width = 35px height = 35px></a>
+        </div></div>
     </div>
     </td>
   </tr>
 </table>
 
-</div>
 
+  <table th:if="${not #lists.isEmpty(note)}">
+    <tr th:each="n : ${note}">
+      <td th:if="${n.getIsDelete() == true}"><div class="form1">
+        <span th:text="${n.title}"></span>
+        <div class="form0">
+          <div class="help">
+            <a th:href="@{/user/{userId}/folder/{folderId}/bin/{noteId}/delete(userId = ${id0}, folderId = ${id1}, noteId = ${n.getId()})}">
+              <img th:src="@{/png/d.gif}" alt="" width = 35px height = 35px></a>
+
+            <a th:href="@{/user/{userId}/folder/{folderId}/bin/{noteId}/edit(userId = ${id0}, folderId = ${id1}, noteId = ${n.getId()})}">
+              <img th:src="@{/png/r.gif}" alt="" width = 35px height = 35px></a>
+          </div></div>
+      </div>
+      </td>
+    </tr>
+  </table>
+
+</div>
 
 <div class="btn-up btn-up_hide"></div>
 <script>
