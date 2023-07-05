@@ -2,9 +2,6 @@ package com.example.mininotes.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.antlr.v4.runtime.misc.NotNull;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Indexed;
 
 import java.util.Arrays;
@@ -16,7 +13,7 @@ import java.util.stream.Collectors;
 @Entity
 @Indexed
 @Table(name = "PS_USER")
-public class User implements UserDetails {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
@@ -59,11 +56,6 @@ public class User implements UserDetails {
         this.status = status;
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority(role.toString()));
-    }
-
     public void setId(long id) {this.id = id;}
     public void setName(String name) {this.name = name;}
     public void setPassword(String password) {this.password = password;}
@@ -76,31 +68,6 @@ public class User implements UserDetails {
     public long getId() {return id;}
     public String getName() {return name;}
     public String getPassword() {return password;}
-
-    @Override
-    public String getUsername() {
-        return name;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return status != status.BLOCKED;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 
     public Role getRole() {return role;}
     public Status getStatus() {return status;}

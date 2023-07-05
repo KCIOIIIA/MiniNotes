@@ -16,12 +16,6 @@
     <img class="mb-4" th:src="@{/images/iconmonstr-user-circle-thin-240.png}" alt="">
     <h1 class="h3 mb-3 fw-normal">Регистрация</h1>
 
-    <!--        <p th:if="${param.error}" class="text-danger">Неверная пара Логин/Пароль</p>-->
-    <!--        <p th:if="${param.logout}" class="text-info">Вы успешно вышли из системы</p>-->
-    <div class="form-floating">
-      <input type="email" class="form-control" id="floatingEmail" placeholder="name@example.com" name="email" th:field="*{email}">
-      <label for="floatingEmail">E-mail адрес</label>
-    </div>
     <div class="form-floating">
       <input type="text" class="form-control" id="floatingInput" placeholder="Логин" name="username" th:field="*{username}">
       <label for="floatingInput">Имя пользователя</label>

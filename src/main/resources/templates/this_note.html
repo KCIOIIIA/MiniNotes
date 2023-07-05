@@ -144,33 +144,16 @@
       <div class="delete">Очистить корзину</div></a>
   </div>
 
-  <table th:if="${not #lists.isEmpty(folder)}">
-    <tr th:each="f : ${folder}">
-      <td th:if="${f.getIsDelete() == true}"><div class="form1">
-        <span th:text="${f.name}"></span>
-        <div class="form0">
-          <div class="help">
-            <a th:href="@{/user/{userId}/folder/{folderId}/bin/delete(userId = ${id0}, folderId = ${f.getId()})}">
-              <img th:src="@{/png/d.gif}" alt="" width = 35px height = 35px></a>
-
-            <a th:href="@{/user/{userId}/folder/{folderId}/bin/edit(userId = ${id0}, folderId = ${f.getId()})}">
-              <img th:src="@{/png/r.gif}" alt="" width = 35px height = 35px></a>
-          </div></div>
-      </div>
-      </td>
-    </tr>
-  </table>
-
   <table th:if="${not #lists.isEmpty(notes)}">
     <tr th:each="n : ${notes}">
       <td th:if="${n.isDelete == true}"><div class="form1">
         <span th:text="${n.title}"></span>
         <div class="form0">
           <div class="help">
-            <a th:href="@{/user/{userId}/folder/{folderId}/note/{id2}/bin/delete(userId = ${id0}, folderId = ${id1}, id2 = ${n.getId()})}">
+            <a th:href="@{/user/{userId}/folder/{folderId}/bin/delete(userId = ${id0}, folderId = ${id1})}">
               <img th:src="@{/png/d.gif}" alt="" width = 35px height = 35px></a>
 
-            <a th:href="@{/user/{userId}/folder/{folderId}/note/{id2}/bin/edit(userId = ${id0}, folderId = ${id1}, id2 = ${n.getId()})}">
+            <a th:href="@{/user/{userId}/folder/{folderId}/bin/edit(userId = ${id0}, folderId = ${id1})}">
               <img th:src="@{/png/r.gif}" alt="" width = 35px height = 35px></a>
           </div></div>
       </div>
