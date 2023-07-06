@@ -161,14 +161,16 @@ public class MiniNotesController {
             k--;
             user.setCountFolders(k);
             int n = user.getCountNotes();
-            n = n - folder.getNoteSet().size();
-            user.setCountNotes(n);
             Set<Note> notes = folder.getNoteSet();
             for(Note note : notes){
+                if (!note.getIsDelete()){
+                    n--;
+                }
                 note.setIsDelete(true);
                 System.out.println("Заметка "+note.getTitle()+" в корзине");
                 noteRep.save(note);
             }
+            user.setCountNotes(n);
             folderRep.save(folder);
         }
         return "success";
@@ -262,8 +264,15 @@ public class MiniNotesController {
             Set <Note> notes = folder.noteSet;
             if (!folder.getIsDelete()) {
                 System.out.println("Проект "+ folder.getName()+" не в корзине");
-                model.addAttribute("id1", folder.getId());
-                model.addAttribute("notes", notes);
+                for(Note note: notes) {
+                    if (note.getIsDelete()) {
+                        System.out.println("Заметка " + note.getTitle() + " в корзине");
+                        model.addAttribute("notes", notes);
+                        model.addAttribute("id1", folder.getId());
+                    } else {
+                        System.out.println("Заметка " + note.getTitle() + " не в корзине");
+                    }
+                }
             }
         }
         model.addAttribute("id0", id0);
@@ -348,6 +357,7 @@ public class MiniNotesController {
             user.setCountFolders(k);
             int n = user.getCountNotes();
             n = n + folder.getNoteSet().size();
+            System.out.println("Кол-во заметок в проекте "+ folder.getName()+" = "+folder.getNoteSet().size());
             user.setCountNotes(n);
             userRep.save(user);
             folderRep.save(folder);
