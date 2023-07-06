@@ -372,6 +372,9 @@ public class MiniNotesController {
         User user = userOptional.get();
         Optional<Note> noteOptional = noteRep.findById(id2);
         Note note = noteOptional.get();
+        Optional<Folder> folder = folderRep.findById(id1);
+        Folder f = folder.get();
+        model.addAttribute("f", f.getName());
         System.out.println("Заметка "+note.getTitle()+" восстановлена!");
         note.setIsDelete(false);
         noteRep.save(note);
@@ -380,7 +383,7 @@ public class MiniNotesController {
         user.setCountNotes(n);
         userRep.save(user);
         noteRep.save(note);
-        return "success1";
+        return "success11";
     }
     /**Удалить заметку из корзины**/
     @GetMapping("/user/{id0}/folder/{id1}/note/{id2}/bin/delete")
@@ -391,7 +394,7 @@ public class MiniNotesController {
         System.out.println("Заметка "+note.getTitle()+" полностью удалена!");
         note.setFolder(null);
         noteRep.save(note);
-        return "success0";
+        return "success00";
     }
     /**Профиль пользователя**/
     @GetMapping("/user/{id0}/profile")
