@@ -4,11 +4,15 @@ import com.example.mininotes.models.*;
 import com.example.mininotes.repository.FolderRep;
 import com.example.mininotes.repository.NoteRep;
 import com.example.mininotes.repository.UserRep;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Optional;
@@ -25,80 +29,7 @@ public class MiniNotesController {
     FolderRep folderRep;
     @Autowired
     NoteRep noteRep;
-    /**Общаяя для всех пользователей страница с переходом на вход/регистрацию**/
-    @GetMapping("/")
-    public String index(){
-        return "index";
-    }
-    /**Общаяя для всех пользователей страница входа**/
-    @GetMapping("/login")
-    public String login(Model model) {
-        return "login";
-    }
-    /**Общаяя для всех пользователей страница регистрации**/
-    @GetMapping("/registration")
-    public String crUser(){
-        return "registration";
-    }
-    @PostMapping("/registration")
-    public String createUser(@RequestParam("name") String name,
-                             @RequestParam("password") String password,
-                             @RequestParam("password0") String password0, Model model){
-        User user = new User();
-        user.setName(name);
-        user.setPassword(password);
-        user.setRole(Role.USER);
-        user.setStatus(Status.ACTIV);
-        user.setCountFolders(1);
-        user.setCountNotes(0);
-        model.addAttribute("user", user);
-        model.addAttribute("password0", password0);
-        if (!password.equals(password0)){
-            return "registration_error";
-        } else {
-            userRep.save(user);
-            Optional<User> userOptional = userRep.findById(user.getId());
-            User user1 = userOptional.get();
-            Folder folder = new Folder();
-            folder.setName("Первый проект");
-            folder.setIsDelete(false);
-            user1.addFolder(folder);
-            userRep.save(user1);
-            return "registration";
-        }
-    }
-    /**Страница для администратора со списоком всех пользователей**/
-    @GetMapping("/admin/users")
-    public String getUser(Model model){
-        model.addAttribute("users", userRep.findAll());
-        return "admin_users";
-    }
-    /**Страница для администратора со сменой роли пользователя**/
-    @GetMapping("/admin/{id0}/role")
-    public String getUserRole(@PathVariable long id0, Model model){
-        Optional<User> userOptional = userRep.findById(id0);
-        User user = userOptional.get();
-        if (user.getRole().equals(Role.USER)){
-            user.setRole(Role.ADMIN);}
-        else {
-            user.setRole(Role.USER);
-        }
-        userRep.save(user);
-        return "admin_role";
-    }
-    /**Страница для администратора со сменой статуса пользователя**/
-    @GetMapping("/admin/{id0}/status")
-    public String getUsertatus(@PathVariable long id0, Model model){
-        Optional<User> userOptional = userRep.findById(id0);
-        User user = userOptional.get();
-        if (user.getStatus().equals(Status.ACTIV)){
-            user.setStatus(Status.BLOCKED);}
-        else {
-            user.setStatus(Status.ACTIV);
-        }
-        userRep.save(user);
-        return "admin_role";
-    }
+
     /**Рабочий стол пользователя**/
     @GetMapping("/user/{id0}/desktop")
     public String getAlbum(@PathVariable long id0, Model model) {
@@ -464,5 +395,67 @@ public class MiniNotesController {
                 }
             }
         }
+    }
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    public MiniNotesController(UserRep userRep, PasswordEncoder passwordEncoder) {
+        this.userRep = userRep;
+        this.passwordEncoder = passwordEncoder;
+    }
+
+    @GetMapping(value = "/")
+    public String index(Principal principal, Model model) {
+        if (principal == null) {
+            return "index";
+        } else {
+            model.addAttribute("username", principal.getName());
+            model.addAttribute("id0", userRep.getUserByUsername(principal.getName()).get().getId());
+            return "redirect:/user/" + userRep.getUserByUsername(principal.getName()).get().getId() + "/desktop";
+        }
+    }
+
+    @GetMapping(value = "/login")
+    public String login(Principal principal, Model model) {
+        if (principal == null) {
+            return "login";
+        } else {
+            return "redirect:/";
+        }
+    }
+
+    @GetMapping(value = "/signup")
+    public String signup(Principal principal, Model model) {
+        if (principal == null) {
+            model.addAttribute("user", new SignUpRq());
+            return "signup";
+        } else {
+            return "redirect:/";
+        }
+    }
+
+    @PostMapping(value = "/signup")
+    public String register(@ModelAttribute("user") @Valid SignUpRq signUpRq, Errors errors, Model model) {
+        if (errors.hasErrors()) {
+            return "signup";
+        }
+        if (!signUpRq.getPassword().equals(signUpRq.getPasswordConfirm())){
+            //model.addAttribute("passwordError", "Пароли не совпадают");
+            return "registration_error";
+        }
+        if (userRep.getUserByUsername(signUpRq.getUsername()).isPresent()){
+            model.addAttribute("usernameError", "Пользователь с таким именем уже существует");
+            return "signup";
+        }
+        User user = new User(
+                signUpRq.getUsername(),
+                passwordEncoder.encode(signUpRq.getPassword()),
+                UserStatus.ACTIVE, UserRole.ROLE_USER);
+
+        user.setName(signUpRq.getUsername());
+        user.setCountFolders(0);
+        user.setCountNotes(0);
+        userRep.save(user);
+        return "redirect:/login";
     }
 }

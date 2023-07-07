@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="ru" xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:th="http://www.thymeleaf.org">
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 <head>
-    <meta charset="UTF-8">
+  <meta charset="UTF-8">
     <style>
         .beautiful {
             width: 360px;
@@ -65,20 +66,19 @@
         }
     </style>
 </head>
-<body>
+<body class="text-center">
 <div class="beautiful">
     <div class="beautifulIn">
-        <form align="center" th:action="@{/registration}" method="POST">
-            <input name="name" type="text" id="name" class="form-control" placeholder="Имя"/>
-            <input name="password" type="password" id="password" class="form-control" placeholder="Пароль"/>
-            <input name="password0" type="password" id="password0" class="form-control" placeholder="Подтвердите пароль"/>
-            <button type="submit">Зарегистрироваться</button>
-        </form>
+  <form th:action="@{/signup}" method="post" th:object="${user}">
+      <input type="text" id="floatingInput" placeholder="Логин" name="username">
+      <input type="password" id="floatingPassword1" placeholder="Пароль" name="password">
+      <input type="password" id="floatingRepeatPassword1" placeholder="Пароль" name="passwordConfirm">
 
-        <br><br>
-        <div class="mini">
-            <a th:href="@{/}">Вернуться на главную страницу</a>
-        </div>
+
+    <p>Уже есть аккаунт? <a th:href="@{/login}">Войти</a></p>
+
+    <button type="submit">Зарегистрироваться</button>
+  </form>
     </div>
 </div>
 </body>

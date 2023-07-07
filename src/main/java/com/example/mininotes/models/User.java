@@ -1,80 +1,137 @@
 package com.example.mininotes.models;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.*;
-import org.antlr.v4.runtime.misc.NotNull;
-import org.springframework.stereotype.Indexed;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
-
 @Entity
-@Indexed
 @Table(name = "PS_USER")
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     @Column(name="name")
-    @NotNull
     private String name;
-    @Column(name="password")
     @NotNull
+    @NotEmpty
+    private String username;
+    @NotNull
+    @NotEmpty
     private String password;
-    @Column(name="role")
-    private Role role;
-    @Column(name="status")
-    private Status status;
-    @Column(name="countFolders")
-    private int countFolders;
+    private UserStatus status;
 
-    @Column(name="countNotes")
-    private int countNotes;
-
-    @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
-    private Set<Folder> folderSet = new HashSet<>();
-
+    private UserRole role;
+    private Integer countFolders;
+    private Integer countNotes;
+    
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    Set<Folder> FolderSet = new HashSet<>();
     public User() {}
-
-    public void addFolder(Folder folder){
-        folderSet.add(folder);
-        folder.setUser(this);
-    }
-    public void removeFolder(Folder folder){
-        folderSet.remove(folder);
-        folder.setUser(null);
-    }
-
-    public User(long id, String name, String password, Role role,
-                Status status){
-        this.id = id;
-        this.name = name;
+    public User(String username, String password, UserStatus status, UserRole role) {
+        this.username = username;
         this.password = password;
+        this.status = status;
         this.role = role;
+    }
+
+    public void addFolder(Folder Folder) {
+        FolderSet.add(Folder);
+        Folder.setUser(this);
+    }
+
+    public void removeFolder(Folder Folder) {
+        FolderSet.remove(Folder);
+        Folder.setUser(null);
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return Arrays.asList(new SimpleGrantedAuthority(role.toString()));
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return status != UserStatus.BLOCKED;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    public long getId() {
+        return id;
+    }
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    public UserStatus getStatus() {
+        return status;
+    }
+    public void setStatus(UserStatus status) {
         this.status = status;
     }
+    public Set<Folder> getFolderSet() {
+        return FolderSet;
+    }
+    public void setFolderSet(Set<Folder> FolderSet) {
+        this.FolderSet = FolderSet;
+    }
+    public UserRole getRole() {
+        return role;
+    }
+    public void setRole(UserRole role) {
+        this.role = role;
+    }
 
-    public void setId(long id) {this.id = id;}
-    public void setName(String name) {this.name = name;}
-    public void setPassword(String password) {this.password = password;}
-    public void setRole(Role role) {this.role = role;}
-    public void setStatus(Status status) {this.status = status;}
-    public void setCountFolders(int countFolders) {this.countFolders = countFolders;}
-    public void setCountNotes(int countNotes) {this.countNotes = countNotes;}
-    public void setFolderSet(Set<Folder> folderSet){this.folderSet = folderSet;}
+    public Integer getCountNotes() {return countNotes;}
+    public Integer getCountFolders() {
+        return countFolders;
+    }
+    public void setCountNotes(Integer countNotes) {
+        this.countNotes = countNotes;
+    }
+    public void setCountFolders(Integer countFolders) {
+        this.countFolders = countFolders;
+    }
 
-    public long getId() {return id;}
-    public String getName() {return name;}
-    public String getPassword() {return password;}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public Role getRole() {return role;}
-    public Status getStatus() {return status;}
-    public int getCountFolders() {return countFolders;}
-    public int getCountNotes() {return countNotes;}
-
-    public Set<Folder> getFolderSet() {return folderSet;}
+    public String getName() {
+        return name;
+    }
 
 }
-

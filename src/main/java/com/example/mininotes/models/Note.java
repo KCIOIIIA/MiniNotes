@@ -15,8 +15,6 @@ public class Note {
     private String createDateTime;
     @Column(name="updateDateTime")
     private String updateDateTime;
-    @Column(name="accessMode")
-    private AccessMode accessMode;
     @Column(name="isDelete")
     private Boolean isDelete;
 
@@ -27,13 +25,12 @@ public class Note {
     public Note() {}
 
     public Note(long id, String title, String body, String createDateTime,
-                String updateDateTime, AccessMode accessMode, Boolean isDelete){
+                String updateDateTime, Boolean isDelete){
         this.id = id;
         this.title = title;
         this.body = body;
         this.createDateTime = createDateTime;
         this.updateDateTime = updateDateTime;
-        this.accessMode = accessMode;
         this.isDelete = isDelete;
     }
     public void setId(long id) {
@@ -48,9 +45,6 @@ public class Note {
     }
     public void setUpdateDateTime(String updateDateTime) {
         this.updateDateTime = updateDateTime;
-    }
-    public void setAccessMode(AccessMode accessMode) {
-        this.accessMode = accessMode;
     }
     public void setIsDelete(Boolean isdelete) {isDelete = isdelete;}
     public void setFolder(Folder folder) {this.folder = folder;}
@@ -67,9 +61,6 @@ public class Note {
     }
     public String getUpdateDateTime() {
         return updateDateTime;
-    }
-    public AccessMode getAccessMode() {
-        return accessMode;
     }
     public Boolean getIsDelete() {return isDelete;}
     public Folder getFolder() {return folder;}

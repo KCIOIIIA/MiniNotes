@@ -248,9 +248,9 @@
   <a th:href="@{/user/{userId}/bin(userId = ${id0})}">
     <img class="static" th:src="@{/png/bin.png}" alt="" width = 55px height = 55px>
     <img th:src="@{/png/bin.gif}" alt="" width = 55px height = 55px></a>
-  <a th:href="@{/}">
-    <img class="static" th:src="@{/png/exit.png}" alt="" width = 55px height = 55px>
-    <img th:src="@{/png/exit.gif}" alt="" width = 55px height = 55px></a>
+  <form th:action="@{/logout}" method="post">
+    <input type="image" th:src="@{/png/exit.gif}"  alt="" style="width: 55px"/>
+  </form>
 </div>
 <br>
 
